@@ -1,16 +1,21 @@
 using System.Collections;
+using System.IO;
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class Monster : Character
 {
-    public float m_Speed;
-    Animator anim;
     bool isSpawn = false;   
     Coroutine co_Spawn;
 
-    private void Start()
+    protected override void Start()
     {
-        anim = GetComponent<Animator>();   
+        base.Start();
+    }
+
+    public void Init()
+    { 
+        isDead = false;
+        HP =5; 
         co_Spawn = StartCoroutine(Co_SpawnStart());
     }
 
@@ -30,6 +35,31 @@ public class Monster : MonoBehaviour
         }
         yield return new WaitForSeconds(0.3f);
         isSpawn = true;
+    }
+
+    public void GetDamage(double damage)
+    {
+        if(isDead) return;
+
+        BaseManager.Pool.PoolingObject("DamageText").Get((value) =>{
+            value.GetComponent<DamageText>().Init(transform.position, damage, false);
+        });
+
+        HP -= damage;
+        if(HP <= 0)
+        {
+            isDead = true;
+            Spawner.m_Monsters.Remove(this);
+
+            var smokeObj = BaseManager.Pool.PoolingObject("Smoke").Get((value) =>{
+                value.transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+                BaseManager.instance.ReturnPool(value.GetComponent<ParticleSystem>().main.duration, value, "Smoke");
+            });
+            BaseManager.Pool.PoolingObject("CoinParent").Get((value)=>{
+                value.GetComponent<CoinParent>().Init(transform.position);
+            });
+            BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(this.gameObject);
+        }
     }
 
     private void Update()
@@ -52,13 +82,5 @@ public class Monster : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, Vector3.zero, m_Speed * Time.deltaTime);
             AnimChange("isMove");
         }
-    }
-
-    void AnimChange(string temp)
-    {
-        anim.SetBool("isIdle", false);
-        anim.SetBool("isMove", false);
-
-        anim.SetBool(temp, true);
     }
 }
