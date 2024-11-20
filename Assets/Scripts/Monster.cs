@@ -58,6 +58,15 @@ public class Monster : Character
             BaseManager.Pool.PoolingObject("CoinParent").Get((value)=>{
                 value.GetComponent<CoinParent>().Init(transform.position);
             });
+
+            //테스트 아이템 드랍
+            for(int i=0;i<3;i++)
+            {
+                BaseManager.Pool.PoolingObject("ItemObject").Get((value) =>{
+                    value.GetComponent<ItemObject>().Init(transform.position);
+                });
+            }
+
             BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(this.gameObject);
         }
     }

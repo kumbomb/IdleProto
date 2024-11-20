@@ -6,6 +6,7 @@ public class BaseCanvas : MonoBehaviour
 
     public Transform coinTransform;
     public Transform damageTransform;
+    public Transform itemTransform;
 
     private void Awake()
     {

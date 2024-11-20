@@ -7,8 +7,8 @@ public class Character : MonoBehaviour
     public double ATK;
     public float m_Speed;
     public float ATK_Speed;
-    protected float AttackRange = 5f;    // 공격 범위
-    protected float TargetRange = 10f;    // 탐지 범위
+    protected float AttackRange = 7f;    // 공격 범위
+    protected float TargetRange = 12f;    // 탐지 범위
     protected bool isAttack = false;
 
     protected Transform mTarget;
