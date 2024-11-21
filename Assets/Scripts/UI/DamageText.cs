@@ -17,14 +17,15 @@ public class DamageText : MonoBehaviour
         cam = Camera.main;
     }
 
-    public void Init(Vector3 pos, double damage, bool isCritical = false)
+    public void Init(Vector3 pos, double damage, bool isMonster = false, bool isCritical = false)
     {
         // 대미지 텍스트 표현의 약간의 랜덤성 추가
-        pos.x += Random.Range(-0.3f, 0.3f);
-        pos.z += Random.Range(-0.3f, 0.3f);
+        pos.x += Random.Range(-0.1f, 0.1f);
+        pos.z += Random.Range(-0.1f, 0.1f);
 
         target = pos;
-        mText.text = damage.ToString();
+        mText.text = StringMethod.ToCurrencyString(damage);
+        mText.color = isMonster ? Color.red : Color.white;   
         transform.SetParent(BaseCanvas.instance.damageTransform);
 
         mCritical.SetActive(isCritical);

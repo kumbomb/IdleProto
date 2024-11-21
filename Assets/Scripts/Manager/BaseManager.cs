@@ -11,6 +11,11 @@ public class BaseManager : MonoBehaviour
     public static PoolManager  Pool {get {return s_Pool;}}
     #endregion
 
+    #region  Hero 매니저
+    public static HeroManager s_Hero = new HeroManager();
+    public static HeroManager Hero {get {return s_Hero;}}
+    #endregion
+
     private void Awake() 
     {
         Initialize();

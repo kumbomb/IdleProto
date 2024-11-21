@@ -67,7 +67,7 @@ public class PoolManager
 
     private void AddQueue(string path)
     {
-        var gObj = BaseManager.instance.Instantiate_Path(path);
+        var gObj = BaseManager.instance.Instantiate_Path("PoolingObject/"+path);
         gObj.transform.SetParent(pool_Dictionary[path].parentTransform);
         pool_Dictionary[path].Return(gObj);
     }

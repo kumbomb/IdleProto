@@ -15,4 +15,13 @@ public class Utils : MonoBehaviour
         }
         return "<color=#FFFFFF>";
     }
+    #region  string 형 변환 
+
+    //string to float
+    public static float StringToFloat(string str)
+    {
+        bool isParse = float.TryParse(str, out float result);
+        return isParse ? result : 0f;
+    }
+    #endregion
 }
