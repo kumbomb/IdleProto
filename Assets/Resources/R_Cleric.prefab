@@ -1570,10 +1570,13 @@ MonoBehaviour:
   anim: {fileID: 1223510223851551129}
   HP: 10
   ATK: 10
-  m_Speed: 4
+  m_Speed: 6
   ATK_Speed: 10
   isDead: 0
   mBulletTransform: {fileID: 1846309578676703683}
+  CH_Data: {fileID: 0}
+  trailObject: []
+  CH_Name: 
 --- !u!1 &6110024241464931258
 GameObject:
   m_ObjectHideFlags: 0

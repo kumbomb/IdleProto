@@ -72,7 +72,7 @@ public class Character : MonoBehaviour
 
         BaseManager.Pool.PoolingObject("AttackHelper").Get((value) => {
             value.transform.position = mBulletTransform.position;
-            value.GetComponent<Bullet>().Init(mTarget, 10, "CH_01");
+            value.GetComponent<Bullet>().Init(mTarget, ATK, "CH_01");
         });
     }
 
@@ -83,7 +83,7 @@ public class Character : MonoBehaviour
 
          BaseManager.Pool.PoolingObject("AttackHelper").Get((value) => {
             value.transform.position = mTarget.position;
-            value.GetComponent<Bullet>().Init_Melee_Attack(mTarget, 10);
+            value.GetComponent<Bullet>().Init_Melee_Attack(mTarget, ATK);
         });
     }
 

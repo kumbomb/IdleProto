@@ -27,7 +27,7 @@ public class LvUpBtn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if(isClick)
         {
             timer += Time.deltaTime;
-            if(timer >= 0.1f)
+            if(timer >= 0.01f)
             {
                 EXPUP();
                 timer = 0f;
@@ -40,7 +40,7 @@ public class LvUpBtn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         BaseManager.Hero.EXPUP();
         InitExp();
         transform.DORewind();
-        transform.DOPunchScale(new Vector3(0.05f,0.05f,0.05f), 0.2f);
+        transform.DOPunchScale(new Vector3(0.1f,0.1f,0.1f), 0.2f);
     }
 
     public void OnPointerDown(PointerEventData eventData)

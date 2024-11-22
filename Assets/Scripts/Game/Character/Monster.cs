@@ -1,5 +1,4 @@
 using System.Collections;
-using System.IO;
 using UnityEngine;
 
 public class Monster : Character
@@ -40,9 +39,12 @@ public class Monster : Character
 
     public void Init()
     { 
-        isDead = false;
-        HP =500000; 
+        isSpawn = false;  
+        isDead = false; 
+        ATK = 10;
+        HP = 10; 
         AttackRange = 3f;
+        TargetRange = Mathf.Infinity; // 어느범위에 있던 플레이어를 추적할 수 있도록
         co_Spawn = StartCoroutine(Co_SpawnStart());
     }
 
@@ -50,7 +52,7 @@ public class Monster : Character
     {
         float current = 0f;
         float percent = 0f;
-        float start =0f;
+        float start = 0f;
         float end = transform.localScale.x;
         while(percent < 1)
         {
@@ -68,11 +70,14 @@ public class Monster : Character
     {
         if(isDead) return;
 
+        bool isCritical = CalcCritical(ref damage);     // Critical 여부 체크
+
         BaseManager.Pool.PoolingObject("DamageText").Get((value) =>{
-            value.GetComponent<DamageText>().Init(transform.position, damage, false);
+            value.GetComponent<DamageText>().Init(transform.position, damage, false, isCritical);
         });
 
         HP -= damage;
+
         if(HP <= 0)
         {
             isDead = true;
@@ -96,6 +101,17 @@ public class Monster : Character
 
             BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(this.gameObject);
         }
+    }
+                
+    private bool CalcCritical(ref double damage)
+    {
+       float criticalRate = Random.Range(0f,100f);
+       if(criticalRate <= BaseManager.Hero.CriticalRate)
+       {
+            damage *= BaseManager.Hero.CriticalDamage * 0.01f;
+            return true;
+       }
+       return false;
     }
 
 }

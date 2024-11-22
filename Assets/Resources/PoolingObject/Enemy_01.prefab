@@ -1977,9 +1977,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 543424733250073451}
-  HP: 0
-  ATK: 0
-  m_Speed: 2
+  HP: 10
+  ATK: 10
+  m_Speed: 4
   ATK_Speed: 0
   isDead: 0
   mBulletTransform: {fileID: 0}

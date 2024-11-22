@@ -6,6 +6,7 @@ public class HudCanvas : MonoBehaviour
     public static HudCanvas instance = null;
     public Transform mCoinTransform;
     [SerializeField] private TextMeshProUGUI topLevelText;
+    [SerializeField] private TextMeshProUGUI battlePowerText;
     private void Awake()
     {
         if(instance == null)
@@ -27,6 +28,7 @@ public class HudCanvas : MonoBehaviour
     public void UpdateLvText()
     {
         topLevelText.text = $"Lv.{BaseManager.Hero.Level + 1}";
+        battlePowerText.text = $"{StringMethod.ToCurrencyString(BaseManager.Hero.ALL_Power())}";
     }
 
     private void OnDestroy()

@@ -3,6 +3,7 @@ using UnityEngine;
 public class Player : Character
 {
     public Character_Scriptable CH_Data;
+    public GameObject[] trailObject;
     public string CH_Name;
     Vector3 startPos;
     Quaternion rot;
@@ -18,7 +19,15 @@ public class Player : Character
     {
         CH_Data = data;
         AttackRange = data.mAttackRange;
+        SetStat();
     }
+
+    public void SetStat()
+    {
+        ATK = BaseManager.Hero.GetAtk(CH_Data.mRarity);
+        HP = BaseManager.Hero.GetHp(CH_Data.mRarity);
+    }
+
     void Update()
     {
         FindClosetTarget(Spawner.m_Monsters.ToArray());
@@ -59,12 +68,25 @@ public class Player : Character
 
     public override void GetDamage(double damage)
     {
-        base.GetDamage(damage);
-
         var goObj = BaseManager.Pool.PoolingObject("DamageText").Get((value)=>
         {
             value.GetComponent<DamageText>().Init(transform.position, damage, true);
         });
         HP -= damage;
+    }
+    protected override void MeleeAttack()
+    {
+        base.MeleeAttack();
+        for(int i=0;i<trailObject.Length;i++)
+        {
+            trailObject[i].SetActive(true);
+        }
+        Invoke("TrailDisable",.5f);
+    }
+    private void TrailDisable()
+    {
+        for(int i=0;i<trailObject.Length;i++){
+            trailObject[i].SetActive(false);
+        }
     }
 }

@@ -65,7 +65,7 @@ public class Bullet : MonoBehaviour
             if(mTarget != null && !isHit)
             {
                 isHit = true;
-                mTarget.GetComponent<Character>().GetDamage(10);
+                mTarget.GetComponent<Character>().GetDamage(damage);
                 mProjectiles[mCharName].gameObject.SetActive(false);
                 mMuzzles[mCharName].Play();
                 StartCoroutine(ReturnObj(mMuzzles[mCharName].main.duration));

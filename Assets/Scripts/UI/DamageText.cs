@@ -24,12 +24,14 @@ public class DamageText : MonoBehaviour
         pos.z += Random.Range(-0.1f, 0.1f);
 
         target = pos;
-        mText.text = StringMethod.ToCurrencyString(damage);
         mText.color = isMonster ? Color.red : Color.white;   
+        mText.text = StringMethod.ToCurrencyString(damage);
         transform.SetParent(BaseCanvas.instance.damageTransform);
 
+        //몬스터 피격 데미지 전용 => 크리티컬 판단
         mCritical.SetActive(isCritical);
-        //mText.colorGradient.
+        Color criticalTextColor = isCritical ? Color.yellow : Color.white;
+        mText.colorGradient = new VertexGradient(criticalTextColor, criticalTextColor, Color.white, Color.white);
 
         BaseManager.instance.ReturnPool(2f,this.gameObject,"DamageText");
     }

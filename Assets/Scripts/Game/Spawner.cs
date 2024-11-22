@@ -2,8 +2,6 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using Random = UnityEngine.Random;
-using Cysharp.Threading.Tasks.Triggers;
-using Unity.VisualScripting;
 using System.Collections.Generic;
 
 //몬스터는 여러 마리가 n초 단위로 소환된다.
@@ -11,6 +9,12 @@ public class Spawner : MonoBehaviour
 {
     public int m_Count; // 몬스터 수
     public float m_SpawnTime;   // 몬스터 스폰 시간 텀 
+
+    [Range(0f, 200f)]
+    [SerializeField] float mSpawnAreaDist;      // 최대 소환 거리
+
+    [Range(0f, 200f)]
+    [SerializeField] float mMinSpawnAreaDist;   // 최소 소환 거리
     
     //몬스터와 플레이어 각각 추적용
     public static List<Monster> m_Monsters = new List<Monster>();
@@ -29,13 +33,13 @@ public class Spawner : MonoBehaviour
         {
             for(int i=0;i<m_Count;i++)
             {
-                pos = Vector3.zero + Random.insideUnitSphere * 15f;
+                pos = Vector3.zero + Random.insideUnitSphere * mSpawnAreaDist;
                 pos.y = 0f;
 
                 //너무 중점에 근접한 소환이 되지 않도록 정의
-                while(Vector3.Distance(pos, Vector3.zero) <= 10f)
+                while(Vector3.Distance(pos, Vector3.zero) <= mMinSpawnAreaDist)
                 {
-                    pos = Vector3.zero + Random.insideUnitSphere * 15f;
+                    pos = Vector3.zero + Random.insideUnitSphere * mSpawnAreaDist;
                     pos.y = 0f;
                 }
 

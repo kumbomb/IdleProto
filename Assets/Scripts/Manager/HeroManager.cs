@@ -7,6 +7,8 @@ public class HeroManager
     public double Exp;
     public double Atk = 10;
     public double Hp = 100;
+    public double CriticalRate = 20f;
+    public double CriticalDamage = 140.0d;
 
     List<Dictionary<string, object>> expData = new List<Dictionary<string, object>>();
     bool isInitExpData = false;
@@ -32,10 +34,15 @@ public class HeroManager
         }
       
         Exp += Utils.StringToFloat(expData[Level]["Get_EXP"].ToString());
+
         if(Exp >= Utils.StringToFloat(expData[Level]["EXP"].ToString()))
         {
             Level++;
+            Atk += Next_Atk();
+            Hp += Next_Hp();
             OnLevelUp?.Invoke(); // 이벤트 호출
+
+            for(int i=0;i<Spawner.m_Players.Count; i++) Spawner.m_Players[i].SetStat();
         }
     }
 
@@ -78,4 +85,20 @@ public class HeroManager
         return Utils.StringToFloat(expData[Level]["Get_EXP"].ToString()) * (Level + 1) / 3;
     }
 
+
+    public double GetAtk(RARITY rarity)
+    {
+        return Atk * ((int)rarity + 1);
+    }
+
+    public double GetHp(RARITY rarity)
+    {
+        return Hp * ((int)rarity + 1);
+    }
+
+    //전체 전투력 갱신
+    public double ALL_Power()
+    {
+        return Atk+Hp;
+    }
 }
