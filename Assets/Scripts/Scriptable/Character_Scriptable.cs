@@ -4,6 +4,7 @@ using UnityEngine;
 public class Character_Scriptable : ScriptableObject
 {
     public string charcterName;
+    public string iconName;
     public float mAttackRange;
     public RARITY mRarity;
 }

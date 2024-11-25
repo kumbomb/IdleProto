@@ -22,8 +22,14 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
+        StageManager.mPlayEvent += Initialize;
+    }
+
+    public void Initialize()
+    {
         SpawnMonsters().Forget();
     }
+
     //몬스터 스폰 임시 => 코루틴 대신 UniTask로 사용
     async UniTask SpawnMonsters()
     {

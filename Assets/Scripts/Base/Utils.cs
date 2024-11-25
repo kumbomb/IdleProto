@@ -1,7 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
-public class Utils : MonoBehaviour
+public class Utils
 {
+    //레어리티 컬러 결정 
     public static string String_Color_Rarity (RARITY rare)
     {
         switch(rare)
@@ -15,6 +19,7 @@ public class Utils : MonoBehaviour
         }
         return "<color=#FFFFFF>";
     }
+
     #region  string 형 변환 
 
     //string to float
@@ -22,6 +27,34 @@ public class Utils : MonoBehaviour
     {
         bool isParse = float.TryParse(str, out float result);
         return isParse ? result : 0f;
+    }
+    #endregion
+
+    #region  Sprite 관련 
+    public static SpriteAtlas charAtlas = Resources.Load<SpriteAtlas>("Atlas/CharAtlas");  
+    public static Sprite GetSpriteFromAtlas(string name)
+    {
+        if(charAtlas == null) charAtlas = Resources.Load<SpriteAtlas>("Atlas/CharAtlas");  
+        return charAtlas.GetSprite(name);
+    }
+    #endregion
+
+    #region POPUP 관련 
+    public static Stack<UI_Base> UI_Stack = new Stack<UI_Base>();
+
+    //전체 팝업 끄기 
+    public static void CloseAllPopup()
+    {
+        while(UI_Stack.Count > 0) ClosePopup();
+    }
+
+    //팝업이 없으면 게임 종료 팝업 띄우기
+    public static void ClosePopup()
+    {
+        if(UI_Stack.Count == 0) return;
+        
+        UI_Base popup = UI_Stack.Peek();
+        popup.DisableObj();
     }
     #endregion
 }

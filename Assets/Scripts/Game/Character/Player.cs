@@ -12,6 +12,7 @@ public class Player : Character
         base.Start();
         SetData(Resources.Load<Character_Scriptable>($"Scriptable/{CH_Name}"));
         Spawner.m_Players.Add(this);
+        StageManager.mReadyEvent += OnReady;
         startPos = transform.position;
         rot = transform.rotation;
     }
@@ -28,9 +29,17 @@ public class Player : Character
         HP = BaseManager.Hero.GetHp(CH_Data.mRarity);
     }
 
+    void OnReady()
+    {
+        transform.position = startPos;
+    }
+
     void Update()
     {
+        if(StageManager.mState != STAGE_STATE.PLAY)  return;
+
         FindClosetTarget(Spawner.m_Monsters.ToArray());
+        
         if(mTarget == null)
         {
             float targetPos = Vector3.Distance(transform.position, startPos);
@@ -45,24 +54,24 @@ public class Player : Character
                 transform.rotation = rot;
                 AnimChange("isIdle");
             }
-            return;
         }
-
-        if(mTarget.GetComponent<Character>().isDead) FindClosetTarget(Spawner.m_Monsters.ToArray());
-
-        float targetDistance = Vector3.Distance(transform.position, mTarget.position);
-        //추적범위 안 && 공격 범위에 안 닿으면 
-        if(targetDistance <= TargetRange && targetDistance > AttackRange && !isAttack)
-        {
-            AnimChange("isMove");
-            transform.position = Vector3.MoveTowards(transform.position, mTarget.position, Time.deltaTime * m_Speed);
-            transform.LookAt(mTarget.position);
-        }
-        else if(targetDistance <= AttackRange && !isAttack)
-        {
-            isAttack= true;
-            AnimChange("isAttack");
-            Invoke("InitAttack", 1f);
+        else{ 
+            if(mTarget.GetComponent<Character>().isDead) FindClosetTarget(Spawner.m_Monsters.ToArray());
+                
+            float targetDistance = Vector3.Distance(transform.position, mTarget.position);
+            //추적범위 안 && 공격 범위에 안 닿으면 
+            if(targetDistance <= TargetRange && targetDistance > AttackRange && !isAttack)
+            {
+                AnimChange("isMove");
+                transform.position = Vector3.MoveTowards(transform.position, mTarget.position, Time.deltaTime * m_Speed);
+                transform.LookAt(mTarget.position);
+            }
+            else if(targetDistance <= AttackRange && !isAttack)
+            {
+                isAttack= true;
+                AnimChange("isAttack");
+                Invoke("InitAttack", 1f);
+            }
         }
     }
 

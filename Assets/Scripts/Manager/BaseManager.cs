@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 //매니저 상위 스크립트
@@ -26,6 +27,7 @@ public class BaseManager : MonoBehaviour
         if(instance == null)
         {
             instance = this;
+            StageManager.ChangeStageState(STAGE_STATE.READY);
             Pool.Initialize(this.transform);
             DontDestroyOnLoad(this.gameObject);
         }
