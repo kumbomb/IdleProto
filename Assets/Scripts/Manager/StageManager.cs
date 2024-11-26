@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using System;
 
 // State Pattern 사용 
@@ -20,6 +19,19 @@ public class StageManager
 {
     //현재 스테이트
     public static STAGE_STATE mState = STAGE_STATE.READY;
+
+    public static int mMaxCount = 10;        // 스테이지 내 보스 등장까지 필요한 마리수 
+    static int mCurCount;        // 현재 처치한 마리수 
+    public static int CurCount
+    {
+        get{
+            return mCurCount;
+        }
+        set{
+            mCurCount = value;
+            HudCanvas.instance.StageProgress_Event();
+        }
+    } 
     
     //델리게이트 체인 
     //하나의 델리게이트가 여러 함수 참조 가능 <= 여러개의 함수를 등록가능
@@ -37,7 +49,7 @@ public class StageManager
             case STAGE_STATE.READY:
             {
                 mReadyEvent?.Invoke();
-                NextAction(()=>{ChangeStageState(STAGE_STATE.PLAY);}, 2f);
+                Utils.NextAction(()=>{ChangeStageState(STAGE_STATE.PLAY);}, 2f);
             }
             break;
             case STAGE_STATE.PLAY:
@@ -71,19 +83,6 @@ public class StageManager
             }
             break;
         }
-    }
-
-    public static void NextAction(Action action, float timer)
-    {
-        //Debug.Log("NextAction");
-        ActionTask(action, timer).Forget();
-    }
-
-    async static UniTask ActionTask(Action action, float timer)
-    {
-        //Debug.Log("Uni Task");
-        await UniTask.Delay(TimeSpan.FromSeconds(timer));
-        action?.Invoke();
     }
 
 }

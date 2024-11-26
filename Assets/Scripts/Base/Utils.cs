@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
+using System;
+using Cysharp.Threading.Tasks;
 
 public class Utils
 {
@@ -57,4 +59,21 @@ public class Utils
         popup.DisableObj();
     }
     #endregion
+
+
+    #region 함수 지연 호출 및 실행 
+    public static void NextAction(Action action, float timer)
+    {
+        //Debug.Log("NextAction");
+        ActionTask(action, timer).Forget();
+    }
+
+    async static UniTask ActionTask(Action action, float timer)
+    {
+        //Debug.Log("Uni Task");
+        await UniTask.Delay(TimeSpan.FromSeconds(timer));
+        action?.Invoke();
+    }
+    #endregion
+
 }

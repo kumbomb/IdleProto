@@ -1,8 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : Character
 {
     public Character_Scriptable CH_Data;
+    [SerializeField] ParticleSystem provocation;    // 보스 등장시 나올 이펙트
     public GameObject[] trailObject;
     public string CH_Name;
     Vector3 startPos;
@@ -12,7 +14,10 @@ public class Player : Character
         base.Start();
         SetData(Resources.Load<Character_Scriptable>($"Scriptable/{CH_Name}"));
         Spawner.m_Players.Add(this);
+
         StageManager.mReadyEvent += OnReady;
+        StageManager.mBossReadyEvent += OnBoss;
+
         startPos = transform.position;
         rot = transform.rotation;
     }
@@ -33,6 +38,35 @@ public class Player : Character
     {
         transform.position = startPos;
     }
+
+    #region 보스 등장시 처리 // 넉백 연출 포함 
+    void OnBoss()
+    {
+        AnimChange("isIdle");
+        provocation.Play();
+    }
+
+    public void Knockback(Vector3 targetPos)
+    {
+        transform.LookAt(targetPos);
+        StartCoroutine(Co_Knockback(7f, 0.3f));
+    }
+
+    IEnumerator Co_Knockback(float power, float duration)
+    {
+        float t = duration;
+        Vector3 force = this.transform.forward * -power;
+        force.y = 0f;
+
+        while(t > 0f)
+        {
+            t -= Time.deltaTime;
+            transform.position += force * Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    #endregion 
 
     void Update()
     {

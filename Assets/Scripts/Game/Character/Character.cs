@@ -1,8 +1,10 @@
+using System.Linq;
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
     [SerializeField] Animator anim;
+    [SerializeField] ParticleSystem[] spawnParticles;
     public double HP;
     public double ATK;
     public float m_Speed;
@@ -34,6 +36,12 @@ public class Character : MonoBehaviour
 
     protected void InitAttack() => isAttack = false;
 
+    public virtual void PlaySpawnParticles()
+    {
+        if(spawnParticles.Length <= 0) return;
+        for(int i=0;i<spawnParticles.Length;i++)
+            spawnParticles[i].Play();
+    }
 
     //인근 추적 => 거리로 체크
     //Component => 는 기본적으로 Transform으로 변환이 가능

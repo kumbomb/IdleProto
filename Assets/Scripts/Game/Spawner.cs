@@ -3,6 +3,8 @@ using Cysharp.Threading.Tasks;
 using System;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using System.Threading;
+using Unity.Mathematics;
 
 //몬스터는 여러 마리가 n초 단위로 소환된다.
 public class Spawner : MonoBehaviour
@@ -20,14 +22,34 @@ public class Spawner : MonoBehaviour
     public static List<Monster> m_Monsters = new List<Monster>();
     public static List<Player> m_Players = new List<Player>();
 
+    private CancellationTokenSource stageMonsterSpawnCTS;
+
     void Start()
     {
-        StageManager.mPlayEvent += Initialize;
+        StageManager.mPlayEvent += OnPlay;
+        StageManager.mBossReadyEvent += OnBoss;
     }
 
-    public void Initialize()
+    //일반 몬스터 소환
+    public void OnPlay()
     {
         SpawnMonsters().Forget();
+    }
+    //보스 몬스터 소환
+    public void OnBoss()
+    {
+        stageMonsterSpawnCTS = new CancellationTokenSource();
+        stageMonsterSpawnCTS.Cancel();
+
+        //일반 몬스터 제거 
+        for(int i=0;i<m_Monsters.Count;i++)
+        {
+            BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(m_Monsters[i].gameObject);
+        }
+        m_Monsters.Clear();
+
+        //보스 소환
+        SpawnBossMonster().Forget();
     }
 
     //몬스터 스폰 임시 => 코루틴 대신 UniTask로 사용
@@ -60,5 +82,26 @@ public class Spawner : MonoBehaviour
 
             await UniTask.Delay(TimeSpan.FromSeconds(m_SpawnTime));
         }
+    }
+
+    //보스 몬스터 스폰 
+    async UniTask SpawnBossMonster()
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(2f));
+        var bossMonster = Instantiate(Resources.Load<Monster>("PoolingObject/Boss_01"), Vector3.zero, quaternion.identity);
+        bossMonster.Init();
+
+        Vector3 bossPos = bossMonster.transform.position;
+
+        //플레이어 전체 넉백
+        for(int i = 0;i < m_Players.Count;i++)
+        {
+            if(Vector3.Distance(bossPos, m_Players[i].transform.position) <= 10f)
+            {
+                m_Players[i].Knockback(bossPos);
+            }
+        }
+        await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
+        StageManager.ChangeStageState(STAGE_STATE.BOSS_PLAY);
     }
 }

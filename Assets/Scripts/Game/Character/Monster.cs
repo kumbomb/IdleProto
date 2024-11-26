@@ -14,6 +14,10 @@ public class Monster : Character
     private void Update()
     {
         if(!isSpawn) return;
+
+        if(StageManager.mState != STAGE_STATE.PLAY &&
+                StageManager.mState != STAGE_STATE.BOSS_PLAY) return;
+
         if(mTarget == null)
             FindClosetTarget(Spawner.m_Players.ToArray());
         else
@@ -62,8 +66,14 @@ public class Monster : Character
             transform.localScale = Vector3.one * LerpPos;
             yield return null;
         }
+        PlaySpawnParticles();
         yield return new WaitForSeconds(0.3f);
         isSpawn = true;
+    }
+
+    public override void PlaySpawnParticles()
+    {
+        base.PlaySpawnParticles();
     }
 
     public override void GetDamage(double damage)
@@ -81,28 +91,34 @@ public class Monster : Character
         if(HP <= 0)
         {
             isDead = true;
-            Spawner.m_Monsters.Remove(this);
-
-            var smokeObj = BaseManager.Pool.PoolingObject("Smoke").Get((value) =>{
-                value.transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
-                BaseManager.instance.ReturnPool(value.GetComponent<ParticleSystem>().main.duration, value, "Smoke");
-            });
-            BaseManager.Pool.PoolingObject("CoinParent").Get((value)=>{
-                value.GetComponent<CoinParent>().Init(transform.position);
-            });
-
-            //테스트 아이템 드랍
-            for(int i=0;i<3;i++)
-            {
-                BaseManager.Pool.PoolingObject("ItemObject").Get((value) =>{
-                    value.GetComponent<ItemObject>().Init(transform.position);
-                });
-            }
-
-            BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(this.gameObject);
+            Death();
         }
     }
-                
+
+    private void Death()
+    {
+        StageManager.CurCount++;
+        Spawner.m_Monsters.Remove(this);
+
+        var smokeObj = BaseManager.Pool.PoolingObject("Smoke").Get((value) =>{
+            value.transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+            BaseManager.instance.ReturnPool(value.GetComponent<ParticleSystem>().main.duration, value, "Smoke");
+        });
+        BaseManager.Pool.PoolingObject("CoinParent").Get((value)=>{
+            value.GetComponent<CoinParent>().Init(transform.position);
+        });
+
+        //테스트 아이템 드랍
+        for(int i=0;i<3;i++)
+        {
+            BaseManager.Pool.PoolingObject("ItemObject").Get((value) =>{
+                value.GetComponent<ItemObject>().Init(transform.position);
+            });
+        }
+
+        BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(this.gameObject);
+    }
+
     private bool CalcCritical(ref double damage)
     {
        float criticalRate = Random.Range(0f,100f);
