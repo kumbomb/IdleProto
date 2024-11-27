@@ -16,31 +16,39 @@ public class Character : MonoBehaviour
     protected Transform mTarget;
     public bool isDead = false;
     [SerializeField] Transform mBulletTransform;
+    [SerializeField] string mBulletName;
 
     protected virtual void Start(){
 
     }
     protected void AnimChange(string temp)
     {
-        if (string.Equals(temp, "isAttack"))
-        {
-            anim.SetTrigger("isAttack");
-            return;
-        }
-
         anim.SetBool("isIdle", false);
         anim.SetBool("isMove", false);
+        
+        if (string.Equals(temp, "isAttack") || string.Equals(temp, "isClear"))
+        {
+            anim.SetTrigger(temp);
+            return;
+        }
 
         anim.SetBool(temp, true);
     }
 
     protected void InitAttack() => isAttack = false;
 
+    //스폰 될때 파티클을 띄워줘야하는게 있다면 
     public virtual void PlaySpawnParticles()
     {
         if(spawnParticles.Length <= 0) return;
         for(int i=0;i<spawnParticles.Length;i++)
             spawnParticles[i].Play();
+    }
+
+    //타겟 강제 설정
+    public void SetTarget(Transform _mTarget)
+    {
+        mTarget = _mTarget;
     }
 
     //인근 추적 => 거리로 체크
@@ -80,7 +88,7 @@ public class Character : MonoBehaviour
 
         BaseManager.Pool.PoolingObject("AttackHelper").Get((value) => {
             value.transform.position = mBulletTransform.position;
-            value.GetComponent<Bullet>().Init(mTarget, ATK, "CH_01");
+            value.GetComponent<Bullet>().Init(mTarget, ATK, mBulletName);
         });
     }
 

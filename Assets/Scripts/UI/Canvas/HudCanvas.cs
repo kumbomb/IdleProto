@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using Unity.Multiplayer.Center.Common;
+using System.Collections;
 
 // HUD UI 표현용 Canvas
 public class HudCanvas : MonoBehaviour
@@ -35,6 +35,7 @@ public class HudCanvas : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
     private void Start()
     {
         // OnLevelUp 이벤트에 구독
@@ -42,9 +43,10 @@ public class HudCanvas : MonoBehaviour
 
         //보스 이벤트 등록
         StageManager.mBossReadyEvent += OnBoss;
+        StageManager.mClearEvent += OnClear;
 
         UpdateLvText();
-        StageProgress_Event();
+
         for(int i = 0; i < bottomMenuBtns.Length; i++)
         {
             if(i == 1)
@@ -54,16 +56,45 @@ public class HudCanvas : MonoBehaviour
         }
     }
 
+    #region  Game State 관련
     void OnBoss()
     {
-        bossProgressObj.SetActive(true);
-        stageProgressObj.SetActive(false);
-
-
+        ToggleStageSlider(true);
+    }
+    void OnClear()
+    {
+        ToggleStageSlider(false);
+        //클리어 후 딜레이 처리 
+        StartCoroutine(Co_StageClear());
     }
 
-    public void StageProgress_Event()
+    IEnumerator Co_StageClear()
     {
+        yield return new WaitForSeconds(2f);
+
+        yield return new WaitForSeconds(1f);
+        StageManager.ChangeStageState(STAGE_STATE.READY);
+    }
+
+    #endregion
+
+    #region 스테이지 진행관련 슬라이더 처리
+
+    void ToggleStageSlider(bool isBoss)
+    {
+        bossProgressObj.SetActive(isBoss);
+        stageProgressObj.SetActive(!isBoss);
+    
+        StageProgressEvent();
+        float value = isBoss ? 1f : 0f;
+        BossProgressEvent(value,1f);
+    }
+
+    //일반 몬스터 잡는 경우 
+    public void StageProgressEvent()
+    {
+        if(StageManager.mState == STAGE_STATE.BOSS_PLAY)
+            return;
         float value = (float)StageManager.CurCount / (float)StageManager.mMaxCount;
         value = value >= 1f ? 1f: value;
 
@@ -73,8 +104,18 @@ public class HudCanvas : MonoBehaviour
         }
 
         curProgressFill.fillAmount = value;
-        progressCount.text = $"{value * 100f}%";
+        progressCount.text = $"{(value * 100f):F2}%";
     }
+
+    //보스 몬스터 잡는 경우
+    public void BossProgressEvent(double hp, double maxHp)
+    {
+        float value = (float)hp / (float)maxHp;
+        value = value <= 0f ? 0f : value;
+        curBossHpFill.fillAmount = value;
+        curBossHpPer.text = $"{(value * 100f):F2}%";
+    }
+    #endregion
 
     public void UpdateLvText()
     {

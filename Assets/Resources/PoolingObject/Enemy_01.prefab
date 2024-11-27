@@ -1586,6 +1586,9 @@ MonoBehaviour:
   ATK_Speed: 0
   isDead: 0
   mBulletTransform: {fileID: 0}
+  R_ATK: 10
+  R_HP: 10
+  R_ATTACKRANGE: 3
 --- !u!1 &6734470999820342983
 GameObject:
   m_ObjectHideFlags: 0

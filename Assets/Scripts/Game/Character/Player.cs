@@ -17,6 +17,7 @@ public class Player : Character
 
         StageManager.mReadyEvent += OnReady;
         StageManager.mBossReadyEvent += OnBoss;
+        StageManager.mClearEvent += OnClear;
 
         startPos = transform.position;
         rot = transform.rotation;
@@ -34,22 +35,28 @@ public class Player : Character
         HP = BaseManager.Hero.GetHp(CH_Data.mRarity);
     }
 
+    #region  Game State 관련 
     void OnReady()
     {
+        AnimChange("isIdle");
         transform.position = startPos;
+        transform.rotation = rot;
     }
-
-    #region 보스 등장시 처리 // 넉백 연출 포함 
     void OnBoss()
     {
         AnimChange("isIdle");
         provocation.Play();
     }
-
-    public void Knockback(Vector3 targetPos)
+    void OnClear()
     {
-        transform.LookAt(targetPos);
-        StartCoroutine(Co_Knockback(7f, 0.3f));
+        AnimChange("isClear");
+    }
+    #endregion
+
+    #region 보스 등장시 처리 // 넉백 연출 포함 
+    public void Knockback()
+    {
+        StartCoroutine(Co_Knockback(15f, 0.3f));
     }
 
     IEnumerator Co_Knockback(float power, float duration)
@@ -70,7 +77,8 @@ public class Player : Character
 
     void Update()
     {
-        if(StageManager.mState != STAGE_STATE.PLAY)  return;
+        if(StageManager.mState != STAGE_STATE.PLAY 
+        && StageManager.mState != STAGE_STATE.BOSS_PLAY)  return;
 
         FindClosetTarget(Spawner.m_Monsters.ToArray());
         

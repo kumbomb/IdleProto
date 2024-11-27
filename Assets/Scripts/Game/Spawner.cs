@@ -23,6 +23,8 @@ public class Spawner : MonoBehaviour
     public static List<Player> m_Players = new List<Player>();
 
     private CancellationTokenSource stageMonsterSpawnCTS;
+    private CancellationTokenSource bossMonsterSpawnCTS;
+
 
     void Start()
     {
@@ -32,15 +34,22 @@ public class Spawner : MonoBehaviour
 
     //일반 몬스터 소환
     public void OnPlay()
-    {
-        SpawnMonsters().Forget();
+    {         
+        //보스 관련 중지
+        bossMonsterSpawnCTS?.Cancel();
+
+        stageMonsterSpawnCTS?.Cancel();
+        stageMonsterSpawnCTS = new CancellationTokenSource();
+        SpawnMonsters(stageMonsterSpawnCTS.Token).Forget();
     }
     //보스 몬스터 소환
     public void OnBoss()
     {
-        stageMonsterSpawnCTS = new CancellationTokenSource();
-        stageMonsterSpawnCTS.Cancel();
+        //일반 몬스터 소환 중지
+        stageMonsterSpawnCTS?.Cancel();
 
+        bossMonsterSpawnCTS?.Cancel();
+        bossMonsterSpawnCTS = new CancellationTokenSource();   
         //일반 몬스터 제거 
         for(int i=0;i<m_Monsters.Count;i++)
         {
@@ -49,11 +58,11 @@ public class Spawner : MonoBehaviour
         m_Monsters.Clear();
 
         //보스 소환
-        SpawnBossMonster().Forget();
+        SpawnBossMonster(bossMonsterSpawnCTS.Token).Forget();
     }
 
     //몬스터 스폰 임시 => 코루틴 대신 UniTask로 사용
-    async UniTask SpawnMonsters()
+    async UniTask SpawnMonsters(CancellationToken token)
     {
         Vector3 pos;
 
@@ -80,16 +89,17 @@ public class Spawner : MonoBehaviour
                 });
             }
 
-            await UniTask.Delay(TimeSpan.FromSeconds(m_SpawnTime));
+            await UniTask.Delay(TimeSpan.FromSeconds(m_SpawnTime), cancellationToken: token);
         }
     }
 
     //보스 몬스터 스폰 
-    async UniTask SpawnBossMonster()
+    async UniTask SpawnBossMonster(CancellationToken token)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(2f));
+        await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: token);
         var bossMonster = Instantiate(Resources.Load<Monster>("PoolingObject/Boss_01"), Vector3.zero, quaternion.identity);
         bossMonster.Init();
+        m_Monsters.Add(bossMonster.GetComponent<Monster>());
 
         Vector3 bossPos = bossMonster.transform.position;
 
@@ -98,10 +108,12 @@ public class Spawner : MonoBehaviour
         {
             if(Vector3.Distance(bossPos, m_Players[i].transform.position) <= 10f)
             {
-                m_Players[i].Knockback(bossPos);
+                m_Players[i].transform.LookAt(bossMonster.transform.position);
+                m_Players[i].Knockback();
             }
         }
-        await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
+        await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: token);      
+
         StageManager.ChangeStageState(STAGE_STATE.BOSS_PLAY);
     }
 }

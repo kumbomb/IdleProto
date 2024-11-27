@@ -1663,6 +1663,7 @@ MonoBehaviour:
   ATK_Speed: 10
   isDead: 0
   mBulletTransform: {fileID: 1846309578676703683}
+  mBulletName: CH_01
   CH_Data: {fileID: 0}
   provocation: {fileID: 903567646625493641}
   trailObject: []

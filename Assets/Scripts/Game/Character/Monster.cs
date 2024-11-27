@@ -6,6 +6,9 @@ public class Monster : Character
     bool isSpawn = false;   
     Coroutine co_Spawn;
 
+    public double R_ATK, R_HP, R_ATTACKRANGE;
+    [SerializeField]bool isBoss = false;
+
     protected override void Start()
     {
         base.Start();
@@ -40,18 +43,18 @@ public class Monster : Character
             }
         }
     }
-
+    // Data Init
     public void Init()
     { 
         isSpawn = false;  
         isDead = false; 
-        ATK = 10;
-        HP = 10; 
-        AttackRange = 3f;
+        ATK = R_ATK;
+        HP = R_HP; 
+        AttackRange = (float)R_ATTACKRANGE;
         TargetRange = Mathf.Infinity; // 어느범위에 있던 플레이어를 추적할 수 있도록
         co_Spawn = StartCoroutine(Co_SpawnStart());
     }
-
+    // Monster Spawn Init 
     IEnumerator Co_SpawnStart()
     {
         float current = 0f;
@@ -88,6 +91,11 @@ public class Monster : Character
 
         HP -= damage;
 
+        if(isBoss)
+        {
+            HudCanvas.instance.BossProgressEvent(HP, 5000);
+        }
+
         if(HP <= 0)
         {
             isDead = true;
@@ -97,7 +105,16 @@ public class Monster : Character
 
     private void Death()
     {
-        StageManager.CurCount++;
+        if(!isBoss)
+        {
+            StageManager.CurCount++;
+            HudCanvas.instance.StageProgressEvent();
+        }
+        else
+        {
+            StageManager.ChangeStageState(STAGE_STATE.CLEAR);
+        }
+
         Spawner.m_Monsters.Remove(this);
 
         var smokeObj = BaseManager.Pool.PoolingObject("Smoke").Get((value) =>{
@@ -116,7 +133,12 @@ public class Monster : Character
             });
         }
 
-        BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(this.gameObject);
+        if(!isBoss)
+            BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(this.gameObject);
+        else
+        {   
+            Destroy(this.gameObject);
+        }  
     }
 
     private bool CalcCritical(ref double damage)

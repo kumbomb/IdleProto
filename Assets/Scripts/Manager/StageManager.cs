@@ -29,10 +29,12 @@ public class StageManager
         }
         set{
             mCurCount = value;
-            HudCanvas.instance.StageProgress_Event();
+            //HudCanvas.instance.StageProgress_Event();
         }
     } 
     
+    public static int mStage; // 현재 스테이지 번호
+
     //델리게이트 체인 
     //하나의 델리게이트가 여러 함수 참조 가능 <= 여러개의 함수를 등록가능
     public static OnReadyEvent mReadyEvent;
@@ -48,41 +50,49 @@ public class StageManager
         {
             case STAGE_STATE.READY:
             {
+                Debug.Log("Ready");
                 mReadyEvent?.Invoke();
                 Utils.NextAction(()=>{ChangeStageState(STAGE_STATE.PLAY);}, 2f);
             }
             break;
             case STAGE_STATE.PLAY:
             {
+                Debug.Log("PLAY");
                 mPlayEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.BOSS_READY);}, 2f);
             }
             break;
             case STAGE_STATE.BOSS_READY:
             {
+                Debug.Log("BOSS READY");
+                mCurCount = 0;
                 mBossReadyEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.BOSS_PLAY);}, 2f);
             }
             break;
             case STAGE_STATE.BOSS_PLAY:
             {
+                Debug.Log("BOSS PLAY");
                 mBossPlayEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.PLAYER_DEAD);}, 2f);
             }
             break;
             case STAGE_STATE.PLAYER_DEAD:
             {
+                Debug.Log("PLAYER_DEAD");
                 mPlayerDeadEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.CLEAR);}, 2f);
             }
             break;
             case STAGE_STATE.CLEAR:
             {
+                mStage++;
+                Debug.Log("CLEAR");
                 mClearEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.READY);}, 2f);
             }
             break;
         }
     }
-
+    
 }
