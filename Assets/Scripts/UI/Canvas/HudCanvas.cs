@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 
 // HUD UI 표현용 Canvas
 public class HudCanvas : MonoBehaviour
@@ -24,6 +25,9 @@ public class HudCanvas : MonoBehaviour
     [SerializeField] private Image curBossHpFill;
     [SerializeField] private TextMeshProUGUI curBossHpPer;
     [SerializeField] private TextMeshProUGUI curStageNum;
+    [Header("보스 재도전  ")]
+    [SerializeField] GameObject bossRetryBtn;
+    Button btnBossRetry;
     private void Awake()
     {
         if(instance == null)
@@ -42,10 +46,13 @@ public class HudCanvas : MonoBehaviour
         BaseManager.Hero.OnLevelUp += UpdateLvText;
 
         //보스 이벤트 등록
+        UpdateLvText();
+        ToggleStageSlider(false);
+
+        StageManager.mReadyEvent += OnReady;
         StageManager.mBossReadyEvent += OnBoss;
         StageManager.mClearEvent += OnClear;
-
-        UpdateLvText();
+        StageManager.mPlayerDeadEvent += OnDead;
 
         for(int i = 0; i < bottomMenuBtns.Length; i++)
         {
@@ -57,15 +64,29 @@ public class HudCanvas : MonoBehaviour
     }
 
     #region  Game State 관련
+    public void SetBossBattle()
+    {
+        StageManager.isDead =false;
+        StageManager.ChangeStageState(STAGE_STATE.BOSS_READY);
+        //ToggleStageSlider(true);
+    }
+    void OnReady()
+    {
+        UpdateLvText();
+        ToggleStageSlider(false);
+    }
     void OnBoss()
     {
         ToggleStageSlider(true);
     }
     void OnClear()
     {
-        ToggleStageSlider(false);
         //클리어 후 딜레이 처리 
         StartCoroutine(Co_StageClear());
+    }
+    void OnDead()
+    {
+        StartCoroutine(Co_Dead());
     }
 
     IEnumerator Co_StageClear()
@@ -76,12 +97,35 @@ public class HudCanvas : MonoBehaviour
         StageManager.ChangeStageState(STAGE_STATE.READY);
     }
 
+    IEnumerator Co_Dead()
+    {
+        yield return StartCoroutine(Co_StageClear());
+        ToggleStageSlider(false);
+        for(int i=0;i<Spawner.m_Monsters.Count;i++)
+        {
+            if(Spawner.m_Monsters[i].isBoss) Destroy(Spawner.m_Monsters[i].gameObject);
+            else{
+                BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(Spawner.m_Monsters[i].gameObject);
+            }   
+        }
+        Spawner.m_Monsters.Clear();
+    }
+
     #endregion
 
     #region 스테이지 진행관련 슬라이더 처리
 
     void ToggleStageSlider(bool isBoss)
     {
+        if(StageManager.isDead)
+        {
+            stageProgressObj.SetActive(false);
+            bossProgressObj.SetActive(false);
+            bossRetryBtn.SetActive(true);
+            return;
+        }
+
+        bossRetryBtn.SetActive(false);
         bossProgressObj.SetActive(isBoss);
         stageProgressObj.SetActive(!isBoss);
     
@@ -95,6 +139,7 @@ public class HudCanvas : MonoBehaviour
     {
         if(StageManager.mState == STAGE_STATE.BOSS_PLAY)
             return;
+
         float value = (float)StageManager.CurCount / (float)StageManager.mMaxCount;
         value = value >= 1f ? 1f: value;
 

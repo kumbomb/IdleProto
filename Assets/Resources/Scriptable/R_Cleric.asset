@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charcterName: R_Cleric
   iconName: Icon_Cleric
-  mAttackRange: 7
+  mAttackRange: 10
   mRarity: 0

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Monster : Character
 {
@@ -7,11 +9,12 @@ public class Monster : Character
     Coroutine co_Spawn;
 
     public double R_ATK, R_HP, R_ATTACKRANGE;
-    [SerializeField]bool isBoss = false;
+    public bool isBoss = false;
 
     protected override void Start()
     {
         base.Start();
+        StageManager.mPlayerDeadEvent += OnDead;
     }
 
     private void Update()
@@ -52,8 +55,25 @@ public class Monster : Character
         HP = R_HP; 
         AttackRange = (float)R_ATTACKRANGE;
         TargetRange = Mathf.Infinity; // 어느범위에 있던 플레이어를 추적할 수 있도록
+
+        if(isBoss)
+        {
+            StartCoroutine(Co_SkillSet());
+        }
+
         co_Spawn = StartCoroutine(Co_SpawnStart());
     }
+
+    //스킬 사용 코루틴 실행 
+    IEnumerator Co_SkillSet()
+    {
+        yield return new WaitForSeconds(3f);
+        GetComponent<SkillBase>().SetSkill();
+
+        StartCoroutine(Co_SkillSet());
+    }
+
+
     // Monster Spawn Init 
     IEnumerator Co_SpawnStart()
     {
@@ -103,12 +123,21 @@ public class Monster : Character
         }
     }
 
+    void OnDead()
+    {
+        StopAllCoroutines();
+        AnimChange("isIdle");
+    }
+
     private void Death()
     {
         if(!isBoss)
         {
-            StageManager.CurCount++;
-            HudCanvas.instance.StageProgressEvent();
+            if(!StageManager.isDead)
+            {
+                StageManager.CurCount++;
+                HudCanvas.instance.StageProgressEvent();
+            }
         }
         else
         {

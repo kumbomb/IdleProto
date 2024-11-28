@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using JetBrains.Annotations;
 
 // State Pattern 사용 
 
@@ -34,6 +35,8 @@ public class StageManager
     } 
     
     public static int mStage; // 현재 스테이지 번호
+
+    public static bool isDead;  // 한번 사망했을때 같은 스테이지면 반복하도록 처리 
 
     //델리게이트 체인 
     //하나의 델리게이트가 여러 함수 참조 가능 <= 여러개의 함수를 등록가능
@@ -80,6 +83,7 @@ public class StageManager
             case STAGE_STATE.PLAYER_DEAD:
             {
                 Debug.Log("PLAYER_DEAD");
+                isDead = true;
                 mPlayerDeadEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.CLEAR);}, 2f);
             }

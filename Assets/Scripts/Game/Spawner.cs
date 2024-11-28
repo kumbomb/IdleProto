@@ -31,7 +31,8 @@ public class Spawner : MonoBehaviour
         StageManager.mPlayEvent += OnPlay;
         StageManager.mBossReadyEvent += OnBoss;
     }
-
+     
+     #region Game State
     //일반 몬스터 소환
     public void OnPlay()
     {         
@@ -60,6 +61,7 @@ public class Spawner : MonoBehaviour
         //보스 소환
         SpawnBossMonster(bossMonsterSpawnCTS.Token).Forget();
     }
+    #endregion
 
     //몬스터 스폰 임시 => 코루틴 대신 UniTask로 사용
     async UniTask SpawnMonsters(CancellationToken token)

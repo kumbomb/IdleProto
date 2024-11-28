@@ -6,5 +6,6 @@ public class Character_Scriptable : ScriptableObject
     public string charcterName;
     public string iconName;
     public float mAttackRange;
+    public double mHP;
     public RARITY mRarity;
 }

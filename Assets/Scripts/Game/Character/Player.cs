@@ -18,6 +18,7 @@ public class Player : Character
         StageManager.mReadyEvent += OnReady;
         StageManager.mBossReadyEvent += OnBoss;
         StageManager.mClearEvent += OnClear;
+        StageManager.mPlayerDeadEvent +=OnDead;
 
         startPos = transform.position;
         rot = transform.rotation;
@@ -39,6 +40,9 @@ public class Player : Character
     void OnReady()
     {
         AnimChange("isIdle");
+        isDead = false;
+        Spawner.m_Players.Add(this);
+        SetStat();
         transform.position = startPos;
         transform.rotation = rot;
     }
@@ -50,6 +54,20 @@ public class Player : Character
     void OnClear()
     {
         AnimChange("isClear");
+    }
+    void OnDead()
+    {
+        Spawner.m_Players.Add(this);
+    }
+    void OnDeadEvent()
+    {   
+        Spawner.m_Players.Remove(this);
+        if(Spawner.m_Players.Count <= 0 && !StageManager.isDead )
+        {
+            StageManager.ChangeStageState(STAGE_STATE.PLAYER_DEAD);
+        }
+        AnimChange("isDead");
+        mTarget = null;
     }
     #endregion
 
@@ -77,6 +95,8 @@ public class Player : Character
 
     void Update()
     {
+        if(isDead) return;
+
         if(StageManager.mState != STAGE_STATE.PLAY 
         && StageManager.mState != STAGE_STATE.BOSS_PLAY)  return;
 
@@ -119,11 +139,17 @@ public class Player : Character
 
     public override void GetDamage(double damage)
     {
+        if(isDead) return;
         var goObj = BaseManager.Pool.PoolingObject("DamageText").Get((value)=>
         {
             value.GetComponent<DamageText>().Init(transform.position, damage, true);
         });
         HP -= damage;
+        if(HP <= 0)
+        {
+            isDead = true;
+            OnDeadEvent();
+        }
     }
     protected override void MeleeAttack()
     {

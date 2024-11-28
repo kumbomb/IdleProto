@@ -60,7 +60,8 @@ public class Bullet : MonoBehaviour
         if(isHit) return;
         mTargetPos.y = 1f;
         transform.position = Vector3.MoveTowards(transform.position, mTargetPos, Time.deltaTime * mSpeed);
-        if(Vector3.Distance(transform.position, mTargetPos) <= 0.1f)
+        float dist = Vector3.Distance(transform.position, mTargetPos);
+        if(dist <= 1f)
         {
             if(mTarget != null && !isHit)
             {

@@ -26,7 +26,7 @@ public class Character : MonoBehaviour
         anim.SetBool("isIdle", false);
         anim.SetBool("isMove", false);
         
-        if (string.Equals(temp, "isAttack") || string.Equals(temp, "isClear"))
+        if (string.Equals(temp, "isAttack") || string.Equals(temp, "isClear") || string.Equals(temp, "isDead"))
         {
             anim.SetTrigger(temp);
             return;

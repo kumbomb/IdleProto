@@ -19167,7 +19167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01d377ff359a31047b1f540be9525fc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mSpeed: 7
+  mSpeed: 15
   MeleeAttack_Particle: {fileID: 5152292399330441389}
 --- !u!1 &3150584430887380535
 GameObject:
