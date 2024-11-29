@@ -69,8 +69,8 @@ public class LvUpBtn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         mExpSlider.fillAmount = BaseManager.Hero.GetEXPPer();
         expText.text = $"{(BaseManager.Hero.GetEXPPer() * 100f).ToString("F2")}%";
-        atkText.text = $"+{StringMethod.ToCurrencyString(BaseManager.Hero.Next_Atk())}";
-        hpText.text = $"+{StringMethod.ToCurrencyString(BaseManager.Hero.Next_Hp())}";
+        atkText.text = $"+{StringMethod.ToCurrencyString(Utils.levelData.mLevelData.ATK())}";
+        hpText.text = $"+{StringMethod.ToCurrencyString(Utils.levelData.mLevelData.HP())}";
         getExpText.text = $"<color=#00FF00>EXP</color> +{BaseManager.Hero.Next_Exp().ToString("F2")}%";
     }
 

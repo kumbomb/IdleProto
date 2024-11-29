@@ -30,6 +30,8 @@ public class CoinParent : MonoBehaviour
             childObjs[i].anchoredPosition = Vector2.zero;
         }
         transform.SetParent(BaseCanvas.instance.coinTransform);
+        BaseManager.Data.Money += Utils.levelData.mStageData.Money();
+        
         StartCoroutine(Co_CoinMove());
     }
 
@@ -67,7 +69,7 @@ public class CoinParent : MonoBehaviour
             }
             yield return null;
         }
-        yield return null;
+        HudCanvas.instance.UpdateLvText();
     }
 
     // 거리 값을 체크

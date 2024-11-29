@@ -8,7 +8,7 @@ public class Monster : Character
     bool isSpawn = false;   
     Coroutine co_Spawn;
 
-    public double R_ATK, R_HP, R_ATTACKRANGE;
+    public float R_ATTACKRANGE;
     public bool isBoss = false;
 
     protected override void Start()
@@ -51,9 +51,8 @@ public class Monster : Character
     { 
         isSpawn = false;  
         isDead = false; 
-        ATK = R_ATK;
-        HP = R_HP; 
-        AttackRange = (float)R_ATTACKRANGE;
+        ATK = Utils.levelData.mStageData.ATK();
+        HP =Utils.levelData.mStageData.HP();
         TargetRange = Mathf.Infinity; // 어느범위에 있던 플레이어를 추적할 수 있도록
 
         if(isBoss)

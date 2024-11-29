@@ -19,11 +19,11 @@ public class LevelDesign : ScriptableObject
 public class LevelData
 {
     [Header("[ === Base Level Data === ]")] // 초기 값들 
-    public float base_ATK;
-    public float base_HP;
-    public float base_EXP;
-    public float base_MAXEXP;
-    public float base_MONEY;
+    public int base_ATK;
+    public int base_HP;
+    public int base_EXP;
+    public int base_MAXEXP;
+    public int base_MONEY;
 
     [Header("[ === Add Value to Level === ]")]
     public float C_ATK;
@@ -31,6 +31,13 @@ public class LevelData
     public float C_EXP;
     public float C_MAXEXP;
     public float C_MONEY;
+
+    public double ATK() => Utils.CalculatedValue(base_ATK, BaseManager.Data.Level, C_ATK);
+    public double HP() => Utils.CalculatedValue(base_HP, BaseManager.Data.Level, C_HP);
+    public double EXP() => Utils.CalculatedValue(base_EXP, BaseManager.Data.Level, C_EXP);
+    public double MaxEXP() => Utils.CalculatedValue(base_MAXEXP, BaseManager.Data.Level, C_MAXEXP);
+    public double Money() => Utils.CalculatedValue(base_MONEY, BaseManager.Data.Level, C_MONEY);
+
 }
 
 
@@ -39,12 +46,17 @@ public class LevelData
 public class StageData
 {
     [Header("[ === Base Level Data === ]")] // 초기 값들 
-    public float base_ATK;
-    public float base_HP;
-    public float base_MONEY;
+    public int base_ATK;
+    public int base_HP;
+    public int base_MONEY;
 
     [Header("[ === Add Value to Level === ]")]
     public float M_ATK;
     public float M_HP;
     public float M_MONEY;
+
+    
+    public double ATK() => Utils.CalculatedValue(base_ATK, BaseManager.Data.Stage, M_ATK);
+    public double HP() => Utils.CalculatedValue(base_HP, BaseManager.Data.Stage, M_HP);
+    public double Money() => Utils.CalculatedValue(base_MONEY, BaseManager.Data.Stage, M_MONEY);
 }

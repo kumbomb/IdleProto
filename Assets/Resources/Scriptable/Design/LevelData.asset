@@ -21,7 +21,7 @@ MonoBehaviour:
     base_MAXEXP: 15
     base_MONEY: 10
     C_ATK: 1.5
-    C_HP: 1.7
+    C_HP: 1.6
     C_EXP: 2
     C_MAXEXP: 2.5
     C_MONEY: 2

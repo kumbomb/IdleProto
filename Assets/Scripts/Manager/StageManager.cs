@@ -34,8 +34,6 @@ public class StageManager
         }
     } 
     
-    public static int mStage; // 현재 스테이지 번호
-
     public static bool isDead;  // 한번 사망했을때 같은 스테이지면 반복하도록 처리 
 
     //델리게이트 체인 
@@ -90,7 +88,7 @@ public class StageManager
             break;
             case STAGE_STATE.CLEAR:
             {
-                mStage++;
+                BaseManager.Data.Stage++;
                 Debug.Log("CLEAR");
                 mClearEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.READY);}, 2f);

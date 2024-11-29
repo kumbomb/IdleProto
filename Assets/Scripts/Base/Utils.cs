@@ -7,6 +7,10 @@ using Cysharp.Threading.Tasks;
 
 public class Utils
 {
+    #region 레벨 디자인 관련 
+    public static LevelDesign levelData = Resources.Load<LevelDesign>("Scriptable/Design/LevelData");
+
+    #endregion
     //레어리티 컬러 결정 
     public static string String_Color_Rarity (RARITY rare)
     {
@@ -76,9 +80,17 @@ public class Utils
     #endregion
    
     #region  계산 관련
-    public static float CalculatedValue(float baseValue, int level, float value)
+    //Level은 0부터 시작
+    public static double CalculatedValue(float baseValue, int level, float value)
     {
-        return baseValue * Mathf.Pow(level, value);
+        return baseValue * Mathf.Pow(level + 1, value);
+    }
+
+    public static bool IsEnoughMoney(double value)
+    {
+        if(BaseManager.Data.Money >= value) return true;
+        else return false;
     }
     #endregion
+
 }

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class HeroManager
 {
-    public int Level;
-    public double Exp;
     public double Atk = 10;
     public double Hp = 100;
     public double CriticalRate = 20f;
@@ -33,15 +31,15 @@ public class HeroManager
             Init();
         }
       
-        Exp += Utils.StringToFloat(expData[Level]["Get_EXP"].ToString());
-
-        if(Exp >= Utils.StringToFloat(expData[Level]["EXP"].ToString()))
+        BaseManager.Data.Exp += Utils.levelData.mLevelData.EXP();
+        
+        if(BaseManager.Data.Exp >= Utils.levelData.mLevelData.MaxEXP())
         {
-            Level++;
-            Atk += Next_Atk();
-            Hp += Next_Hp();
+            BaseManager.Data.Level++;
+            Atk += Utils.levelData.mLevelData.ATK();
+            Hp += Utils.levelData.mLevelData.HP();
             OnLevelUp?.Invoke(); // 이벤트 호출
-
+            BaseManager.Data.Exp = 0;
             for(int i=0;i<Spawner.m_Players.Count; i++) Spawner.m_Players[i].SetStat();
         }
     }
@@ -53,38 +51,18 @@ public class HeroManager
             Init();
         }
       
-        float exp = Utils.StringToFloat(expData[Level]["EXP"].ToString());
-        double myExp = Exp;
+        float exp = (float)Utils.levelData.mLevelData.MaxEXP();
+        double myExp = BaseManager.Data.Exp;
         
-        //레벨업할때마다 구간값 처리를 위해 0%로 표기하기위해
-        if(Level >= 1)
-        {
-            exp -= Utils.StringToFloat(expData[Level-1]["EXP"].ToString());
-            myExp -= Utils.StringToFloat(expData[Level-1]["EXP"].ToString());
-        }
         return (float)myExp / exp;
     }
     //버튼 클릭 한번이 몇% 의 경험치를 얻는지 체크
     public float Next_Exp()
     {
-        float exp = Utils.StringToFloat(expData[Level]["EXP"].ToString());
-        float myExp = Utils.StringToFloat(expData[Level]["Get_EXP"].ToString());
-        if(Level >= 1)
-        {
-            exp -= Utils.StringToFloat(expData[Level-1]["EXP"].ToString());
-        }
+        float exp = (float)Utils.levelData.mLevelData.MaxEXP();
+        float myExp = (float)Utils.levelData.mLevelData.EXP();
         return (myExp / exp) * 100f;
     }
-    public double Next_Atk()
-    {
-        return Utils.StringToFloat(expData[Level]["Get_EXP"].ToString()) * (Level + 1) / 5;
-    }
-
-    public double Next_Hp()
-    {
-        return Utils.StringToFloat(expData[Level]["Get_EXP"].ToString()) * (Level + 1) / 3;
-    }
-
 
     public double GetAtk(RARITY rarity)
     {

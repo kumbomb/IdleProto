@@ -1,9 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 using System.Collections;
-using Unity.VisualScripting;
 
 // HUD UI 표현용 Canvas
 public class HudCanvas : MonoBehaviour
@@ -16,6 +14,8 @@ public class HudCanvas : MonoBehaviour
     [Header("상단 플레이어 레벨 / 전투력")]
     [SerializeField] private TextMeshProUGUI topLevelText;
     [SerializeField] private TextMeshProUGUI battlePowerText;
+    [SerializeField] private TextMeshProUGUI lvUpPriceText;
+    [SerializeField] private TextMeshProUGUI curMoneyText;
     [Header("스테이지 진행도 관련 ")]
     [SerializeField] GameObject stageProgressObj;
     [SerializeField] private Image curProgressFill;
@@ -164,8 +164,15 @@ public class HudCanvas : MonoBehaviour
 
     public void UpdateLvText()
     {
-        topLevelText.text = $"Lv.{BaseManager.Hero.Level + 1}";
-        battlePowerText.text = $"{StringMethod.ToCurrencyString(BaseManager.Hero.ALL_Power())}";
+        topLevelText.text = $"Lv.{BaseManager.Data.Level + 1}";
+        battlePowerText.text = StringMethod.ToCurrencyString(BaseManager.Hero.ALL_Power());
+       
+        //IsEnoughMoney
+        double lvUpPrice = Utils.levelData.mLevelData.Money();
+        lvUpPriceText.text = StringMethod.ToCurrencyString(lvUpPrice);
+        lvUpPriceText.color = Utils.IsEnoughMoney(lvUpPrice) ? Color.green : Color.red; 
+
+        curMoneyText.text = StringMethod.ToCurrencyString(BaseManager.Data.Money);
     }
 
     private void OnDestroy()

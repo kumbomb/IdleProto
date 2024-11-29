@@ -17,6 +17,11 @@ public class BaseManager : MonoBehaviour
     public static HeroManager Hero {get {return s_Hero;}}
     #endregion
 
+    #region  Data 매니저
+    public static DataManager s_Data = new DataManager();
+    public static DataManager Data {get {return s_Data;}}
+    #endregion
+
     private void Awake() 
     {
         Initialize();
