@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66134db6ff3436342a9d617a7b7811fd, type: 3}
+  m_Name: LevelData
+  m_EditorClassIdentifier: 
+  currentLevel: 1
+  currentStage: 1
+  mLevelData:
+    base_ATK: 10
+    base_HP: 50
+    base_EXP: 5
+    base_MAXEXP: 15
+    base_MONEY: 10
+    C_ATK: 1.5
+    C_HP: 1.7
+    C_EXP: 2
+    C_MAXEXP: 2.5
+    C_MONEY: 2
+  mStageData:
+    base_ATK: 5
+    base_HP: 30
+    base_MONEY: 5
+    M_ATK: 1.6
+    M_HP: 2
+    M_MONEY: 1.5

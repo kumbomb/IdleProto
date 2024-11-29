@@ -60,7 +60,6 @@ public class Utils
     }
     #endregion
 
-
     #region 함수 지연 호출 및 실행 
     public static void NextAction(Action action, float timer)
     {
@@ -75,5 +74,11 @@ public class Utils
         action?.Invoke();
     }
     #endregion
-
+   
+    #region  계산 관련
+    public static float CalculatedValue(float baseValue, int level, float value)
+    {
+        return baseValue * Mathf.Pow(level, value);
+    }
+    #endregion
 }

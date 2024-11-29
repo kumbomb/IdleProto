@@ -12,7 +12,7 @@ public class Player : Character
     protected override void Start()
     {
         base.Start();
-        SetData(Resources.Load<Character_Scriptable>($"Scriptable/{CH_Name}"));
+        SetData(Resources.Load<Character_Scriptable>($"Scriptable/Character/{CH_Name}"));
         Spawner.m_Players.Add(this);
 
         StageManager.mReadyEvent += OnReady;
