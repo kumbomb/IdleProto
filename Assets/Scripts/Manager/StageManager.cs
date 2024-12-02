@@ -52,6 +52,7 @@ public class StageManager
             case STAGE_STATE.READY:
             {
                 Debug.Log("Ready");
+                mMaxCount = int.Parse(CSVManager.Spawn_Data[BaseManager.Data.Stage]["MaxCount"].ToString());
                 mReadyEvent?.Invoke();
                 Utils.NextAction(()=>{ChangeStageState(STAGE_STATE.PLAY);}, 2f);
             }

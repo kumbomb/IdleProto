@@ -9,8 +9,8 @@ using Unity.Mathematics;
 //몬스터는 여러 마리가 n초 단위로 소환된다.
 public class Spawner : MonoBehaviour
 {
-    public int m_Count; // 몬스터 수
-    public float m_SpawnTime;   // 몬스터 스폰 시간 텀 
+    private int m_Count; // 몬스터 수
+    private float m_SpawnTime;   // 몬스터 스폰 시간 텀 
 
     [Range(0f, 200f)]
     [SerializeField] float mSpawnAreaDist;      // 최대 소환 거리
@@ -28,11 +28,20 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
+        StageManager.mReadyEvent += OnReady;
         StageManager.mPlayEvent += OnPlay;
         StageManager.mBossReadyEvent += OnBoss;
     }
      
-     #region Game State
+    #region Game State
+    //대기 
+    public void OnReady()
+    {
+
+        Debug.Log(m_Count + " / " + m_SpawnTime);
+        m_Count = int.Parse(CSVManager.Spawn_Data[BaseManager.Data.Stage]["Spawn_Count"].ToString());
+        m_SpawnTime = float.Parse(CSVManager.Spawn_Data[BaseManager.Data.Stage]["Spawn_Timer"].ToString());
+    }
     //일반 몬스터 소환
     public void OnPlay()
     {         
@@ -68,9 +77,11 @@ public class Spawner : MonoBehaviour
     {
         Vector3 pos;
 
+        //최대 마릿수 제한 
+        int value = m_Count - m_Monsters.Count;
         while(true)
         {
-            for(int i=0;i<m_Count;i++)
+            for(int i=0;i<value;i++)
             {
                 pos = Vector3.zero + Random.insideUnitSphere * mSpawnAreaDist;
                 pos.y = 0f;

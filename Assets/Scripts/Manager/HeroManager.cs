@@ -8,29 +8,10 @@ public class HeroManager
     public double CriticalRate = 20f;
     public double CriticalDamage = 140.0d;
 
-    List<Dictionary<string, object>> expData = new List<Dictionary<string, object>>();
-    bool isInitExpData = false;
-
     public event Action OnLevelUp;      // Levelup 시 일어날 이벤트
-
-    //경험치 데이터가 초기화 되지 않았으면 가져온다
-    void Init()
-    {
-        if(isInitExpData) return;
-        if(expData.Count <= 0 || expData == null)
-        {
-            isInitExpData = true;            
-            expData = new List<Dictionary<string, object>>(CSVManager.EXP);
-        }
-    }
 
     public void EXPUP()
     {
-        if(!isInitExpData)
-        {
-            Init();
-        }
-      
         BaseManager.Data.Exp += Utils.levelData.mLevelData.EXP();
         
         if(BaseManager.Data.Exp >= Utils.levelData.mLevelData.MaxEXP())
@@ -46,11 +27,6 @@ public class HeroManager
 
     public float GetEXPPer()
     {
-        if(!isInitExpData)
-        {
-            Init();
-        }
-      
         float exp = (float)Utils.levelData.mLevelData.MaxEXP();
         double myExp = BaseManager.Data.Exp;
         

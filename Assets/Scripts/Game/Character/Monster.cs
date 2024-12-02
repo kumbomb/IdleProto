@@ -10,6 +10,7 @@ public class Monster : Character
 
     public float R_ATTACKRANGE;
     public bool isBoss = false;
+    double maxHp;
 
     protected override void Start()
     {
@@ -51,8 +52,11 @@ public class Monster : Character
     { 
         isSpawn = false;  
         isDead = false; 
-        ATK = Utils.levelData.mStageData.ATK();
-        HP =Utils.levelData.mStageData.HP();
+
+        ATK = isBoss ? Utils.levelData.mStageData.ATK() * 10f : Utils.levelData.mStageData.ATK();
+        HP = isBoss ? Utils.levelData.mStageData.HP() * 10f : Utils.levelData.mStageData.HP();
+        maxHp = HP;
+        AttackRange = R_ATTACKRANGE;
         TargetRange = Mathf.Infinity; // 어느범위에 있던 플레이어를 추적할 수 있도록
 
         if(isBoss)
@@ -68,7 +72,6 @@ public class Monster : Character
     {
         yield return new WaitForSeconds(3f);
         GetComponent<SkillBase>().SetSkill();
-
         StartCoroutine(Co_SkillSet());
     }
 
@@ -80,6 +83,7 @@ public class Monster : Character
         float percent = 0f;
         float start = 0f;
         float end = transform.localScale.x;
+        transform.localScale = Vector3.one;
         while(percent < 1)
         {
             current += Time.deltaTime;
@@ -89,7 +93,7 @@ public class Monster : Character
             yield return null;
         }
         PlaySpawnParticles();
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.15f);
         isSpawn = true;
     }
 
@@ -153,13 +157,17 @@ public class Monster : Character
             value.GetComponent<CoinParent>().Init(transform.position);
         });
 
+
+        #region  아이템 드랍
+        var dropItemSets = BaseManager.Item.GetDropSet();
         //테스트 아이템 드랍
-        for(int i=0;i<3;i++)
+        for(int i=0;i<dropItemSets.Count;i++)
         {
             BaseManager.Pool.PoolingObject("ItemObject").Get((value) =>{
-                value.GetComponent<ItemObject>().Init(transform.position);
+                value.GetComponent<ItemObject>().Init(transform.position,dropItemSets[i]);
             });
         }
+        #endregion
 
         if(!isBoss)
             BaseManager.Pool.pool_Dictionary["Enemy_01"].Return(this.gameObject);

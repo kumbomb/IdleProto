@@ -12,8 +12,8 @@ public class Item_Heroes : MonoBehaviour
     public void Initialize(Character_Scriptable data) 
     {
         rarity = data.mRarity;
-        mRarityBG.sprite = Utils.GetSpriteFromAtlas($"{rarity}");
-        mCharImg.sprite = Utils.GetSpriteFromAtlas(data.iconName);
+        mRarityBG.sprite = Utils.GetSpriteFromAtlas(ATLAS_ENUM.CharAtlas,$"{rarity}");
+        mCharImg.sprite = Utils.GetSpriteFromAtlas(ATLAS_ENUM.CharAtlas,data.iconName);
         mCharImg.SetNativeSize();
     }
 }

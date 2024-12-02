@@ -15,6 +15,17 @@ public class ItemObject : MonoBehaviour
     bool isEnd = false;
     RARITY rarity;
 
+    Item_Scriptable mItemInfo;
+
+    public void Init(Vector3 pos, Item_Scriptable dropItemInfo)
+    {
+        mItemInfo = dropItemInfo;
+        isEnd = false;
+        rarity = mItemInfo.rarity;
+        transform.position = pos;
+        Vector3 targetPos = new Vector3(pos.x + (Random.insideUnitSphere.x * 2f), 0.5f, pos.z + (Random.insideUnitSphere.z * 2f));
+        StartCoroutine(CoSimulateProjectile(targetPos));
+    }
     void RarityCheck()
     {
         isEnd = true;
@@ -22,7 +33,7 @@ public class ItemObject : MonoBehaviour
         mRarity[(int)rarity].SetActive(true);
         itemTextRect.gameObject.SetActive(true);
         itemTextRect.SetParent(BaseCanvas.instance.itemTransform);
-        mItemText.text = Utils.String_Color_Rarity(rarity) + "테스트 아이템" + "</color>";
+        mItemText.text = Utils.String_Color_Rarity(rarity) + mItemInfo.itemName + "</color>";
         StartCoroutine(Co_GetItem());
     }
 
@@ -30,15 +41,6 @@ public class ItemObject : MonoBehaviour
     {
         if(!isEnd ) return;
         itemTextRect.position = Camera.main.WorldToScreenPoint(transform.position);
-    }
-
-    public void Init(Vector3 pos)
-    {
-        isEnd = false;
-        rarity = (RARITY)Random.Range(0, mRarity.Length);
-        transform.position = pos;
-        Vector3 targetPos = new Vector3(pos.x + (Random.insideUnitSphere.x * 2f), 0.5f, pos.z + (Random.insideUnitSphere.z * 2f));
-        StartCoroutine(CoSimulateProjectile(targetPos));
     }
 
     IEnumerator CoSimulateProjectile(Vector3 pos)
@@ -73,6 +75,9 @@ public class ItemObject : MonoBehaviour
         itemTextRect.gameObject.SetActive(false);
 
         m_PickUP.Play();
+
+        //아이템 획득처리 =-> Epic 일때만
+        HudCanvas.instance.GetItem(mItemInfo);
 
         yield return new WaitForSeconds(0.5f);
         BaseManager.Pool.pool_Dictionary["ItemObject"].Return(this.gameObject);

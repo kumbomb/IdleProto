@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 //매니저 상위 스크립트
@@ -22,6 +21,11 @@ public class BaseManager : MonoBehaviour
     public static DataManager Data {get {return s_Data;}}
     #endregion
 
+    #region  Item 매니저
+    public static ItemManager s_Item = new ItemManager();
+    public static ItemManager Item {get{return s_Item;}}
+    #endregion
+
     private void Awake() 
     {
         Initialize();
@@ -32,14 +36,22 @@ public class BaseManager : MonoBehaviour
         if(instance == null)
         {
             instance = this;
-            StageManager.ChangeStageState(STAGE_STATE.READY);
             Pool.Initialize(this.transform);
+            Item.Init();
+
+            Invoke("StartGame", 2f);
+            
             DontDestroyOnLoad(this.gameObject);
         }
         else
         {
             Destroy(this.gameObject);
         }
+    }
+
+    void StartGame()
+    {
+        StageManager.ChangeStageState(STAGE_STATE.READY);
     }
 
     public GameObject Instantiate_Path(string path)

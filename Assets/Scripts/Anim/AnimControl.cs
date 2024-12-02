@@ -1,16 +1,26 @@
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public class AnimControl : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public Action AnimStarAction;
+    public List<Action> AnimIntervalAction;
+    public Action AnimFinishAction;
 
-    // Update is called once per frame
-    void Update()
+
+    public void RunStartAction()
     {
-        
+        AnimStarAction?.Invoke();
+    }
+    public void RunIntervalAnim(int num)
+    {
+        if(AnimIntervalAction.Count < num)
+            return;
+        AnimIntervalAction[num]?.Invoke();
+    }
+    public void RunFinishAction()
+    {
+        AnimFinishAction?.Invoke();
     }
 }

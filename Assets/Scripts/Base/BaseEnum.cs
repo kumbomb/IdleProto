@@ -18,6 +18,14 @@ public enum STAGE_STATE
     CLEAR,       // 보스 클리어 
 }
 
+public enum ATLAS_ENUM
+{
+    CharAtlas,
+    HudAtlas,
+    ItemAtlas,
+}
+
+
 public enum POPUP
 {
     POPUP_HERO,

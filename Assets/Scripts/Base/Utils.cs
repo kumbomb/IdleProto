@@ -5,6 +5,7 @@ using UnityEngine.U2D;
 using System;
 using Cysharp.Threading.Tasks;
 
+
 public class Utils
 {
     #region 레벨 디자인 관련 
@@ -37,11 +38,18 @@ public class Utils
     #endregion
 
     #region  Sprite 관련 
+    public static Dictionary<ATLAS_ENUM, SpriteAtlas> atlasDic = new();   
     public static SpriteAtlas charAtlas = Resources.Load<SpriteAtlas>("Atlas/CharAtlas");  
-    public static Sprite GetSpriteFromAtlas(string name)
+    public static Sprite GetSpriteFromAtlas(ATLAS_ENUM atlas ,string name)
     {
-        if(charAtlas == null) charAtlas = Resources.Load<SpriteAtlas>("Atlas/CharAtlas");  
-        return charAtlas.GetSprite(name);
+        if(atlasDic.Count == 0 || atlasDic == null)
+        {
+            var datas = Resources.LoadAll<SpriteAtlas>("Atlas");
+            for(int i=0;i<datas.Length;i++)
+                atlasDic.Add((ATLAS_ENUM)Enum.Parse(typeof(ATLAS_ENUM), datas[i].name), datas[i]);
+        }
+
+        return atlasDic[atlas].GetSprite(name);
     }
     #endregion
 
