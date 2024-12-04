@@ -6,7 +6,6 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 
 // HUD UI 표현용 Canvas
 public class HudCanvas : MonoBehaviour
@@ -46,9 +45,16 @@ public class HudCanvas : MonoBehaviour
     List<TextMeshProUGUI> m_ItemText = new();
     List<CancellationTokenSource> m_ItemTextCTSList= new();
 
+    [Header("Bottom - HeroStatus")]
+    [SerializeField] Item_HeroesStatus[] heroesStatus;
+    [SerializeField] Image mainHeroSkillFill;
+
+    Dictionary<Player, Item_HeroesStatus> mHeroStatusDic = new();
+
     CancellationTokenSource getTopGradeCTS;         // 상단 노티 unitask CTS
     bool isOpenTopGrade = false;
 
+    #region  Mono
     private void Awake()
     {
         if(instance == null)
@@ -60,7 +66,6 @@ public class HudCanvas : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
     private void Start()
     {
         //보스 이벤트 등록
@@ -92,7 +97,15 @@ public class HudCanvas : MonoBehaviour
         StageManager.mBossReadyEvent += OnBoss;
         StageManager.mClearEvent += OnClear;
         StageManager.mPlayerDeadEvent += OnDead;
+        Player.OnMPChanged += CheckHeroesStatus;
     }
+    private void OnDestroy()
+    {
+        // 메모리 누수를 방지하기 위해 이벤트 구독 해제
+        BaseManager.Hero.OnLevelUp -= UpdateLvText;
+        Player.OnMPChanged -= CheckHeroesStatus;
+    }
+    #endregion 
 
     #region  Game State 관련
     public void SetBossBattle()
@@ -105,6 +118,20 @@ public class HudCanvas : MonoBehaviour
     {
         UpdateLvText();
         ToggleStageSlider(false);
+
+        for(int i=0;i<heroesStatus.Length;i++) heroesStatus[i].Initialize();
+        int value = 1;  //0번은 무조건 Cleric이니까 1부터 시작한다
+        foreach(var data in BaseManager.Char.m_Set_Character)
+        {
+            if(data.Value.Data != null)
+            {
+                string charName = data.Value.Data.charcterName;
+                heroesStatus[data.Key].InitData(data.Value.Data, false);
+                heroesStatus[data.Key].transform.SetSiblingIndex(value++);
+                if(!mHeroStatusDic.ContainsKey(CharacterSpawner.players[charName]))
+                    mHeroStatusDic.Add(CharacterSpawner.players[charName], heroesStatus[data.Key]);
+            }
+        }
     }
     void OnBoss()
     {
@@ -195,6 +222,7 @@ public class HudCanvas : MonoBehaviour
     }
     #endregion
 
+    #region  Hud 상태 갱신 => 경험치 비용 / 전투력 등 
     public void UpdateLvText()
     {
         topLevelText.text = $"Lv.{BaseManager.Data.Level + 1}";
@@ -215,13 +243,7 @@ public class HudCanvas : MonoBehaviour
         stageProgressText.text = StageManager.isDead ? "반복 중" : "도전 중";
         stageProgressText.color = StageManager.isDead ? Color.yellow : mStageColor;
     }
-
-    private void OnDestroy()
-    {
-        // 메모리 누수를 방지하기 위해 이벤트 구독 해제
-        BaseManager.Hero.OnLevelUp -= UpdateLvText;
-    }
-
+    
     //상단 아이템 획득 토스트 메시지 팝업 
     public void GetTopGradeItemPopup(Item_Scriptable itemData)
     {
@@ -240,7 +262,6 @@ public class HudCanvas : MonoBehaviour
         getTopGradeCTS = new CancellationTokenSource();   
         CloseGetTopGradePopup(getTopGradeCTS.Token).Forget();
     }
-
     async UniTask CloseGetTopGradePopup(CancellationToken cts)
     {        
         await UniTask.Delay(TimeSpan.FromSeconds(2), cancellationToken: cts);
@@ -327,5 +348,33 @@ public class HudCanvas : MonoBehaviour
         rect.gameObject.SetActive(false);
         rect.anchoredPosition = Vector2.zero;
     }
+    
+    //영웅들 상태 바 업데이트 
+    public void CheckHeroesStatus(Player _player)
+    {
+        mHeroStatusDic[_player].UpdateStatus(_player);
+    }
 
+    //외부에서 잠시 대기시켜야할때
+    public void SetCharacterData()
+    {
+        int value = 1; //0번은 무조건 Cleric이니까 1부터 시작한다
+        foreach(var data in BaseManager.Char.m_Set_Character)
+        {
+            if(data.Value.Data != null)
+            {
+                heroesStatus[data.Key].InitData(data.Value.Data, true);
+                heroesStatus[data.Key].transform.SetSiblingIndex(value++);
+            }
+        }
+    }
+
+    // 메인 캐릭터 스킬 쿨타임 
+    public void UpdateMainCharSkillState(float value)
+    {
+        mainHeroSkillFill.fillAmount = value;
+    }
+
+    #endregion
+    
 }

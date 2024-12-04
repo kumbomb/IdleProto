@@ -1655,7 +1655,7 @@ Transform:
   m_GameObject: {fileID: 4476754382573318898}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.02, y: 0.00000023841858, z: 0.68}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1705,17 +1705,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 1503523432040809939}
   spawnParticles: []
-  HP: 10
+  HP: 100
   ATK: 10
   m_Speed: 6
   ATK_Speed: 2
   isDead: 0
   mBulletTransform: {fileID: 0}
+  mBulletName: 
   CH_Data: {fileID: 0}
   provocation: {fileID: 1822325130166300684}
   trailObject:
   - {fileID: 1062711925148439047}
   CH_Name: M_Knight_Spear
+  MaxHP: 0
+  MP: 0
+  isMainCharacter: 0
 --- !u!1 &4792329833792055757
 GameObject:
   m_ObjectHideFlags: 0

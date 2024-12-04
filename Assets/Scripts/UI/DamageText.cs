@@ -17,7 +17,8 @@ public class DamageText : MonoBehaviour
         cam = Camera.main;
     }
 
-    public void Init(Vector3 pos, double damage, bool isMonster = false, bool isCritical = false)
+
+    public void Init(Vector3 pos, double damage, bool isRecovery = false ,bool isMonster = false, bool isCritical = false)
     {
         // 대미지 텍스트 표현의 약간의 랜덤성 추가
         pos.x += Random.Range(-0.1f, 0.1f);
@@ -25,6 +26,7 @@ public class DamageText : MonoBehaviour
 
         target = pos;
         mText.color = isMonster ? Color.red : Color.white;   
+        mText.color = isRecovery ? Color.green : mText.color; // 체력 회복의 경우 색상 변경
         mText.text = StringMethod.ToCurrencyString(damage);
         transform.SetParent(BaseCanvas.instance.damageTransform);
 

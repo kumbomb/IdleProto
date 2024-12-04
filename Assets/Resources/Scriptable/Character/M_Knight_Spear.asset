@@ -15,4 +15,7 @@ MonoBehaviour:
   charcterName: M_Knight_Spear
   iconName: Icon_Spearman
   mAttackRange: 5
+  mAttackSpeed: 1
+  mHP: 0
+  mMaxMP: 50
   mRarity: 4

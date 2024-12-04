@@ -1496,7 +1496,7 @@ Transform:
   m_GameObject: {fileID: 3299218902733897006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7469296, y: -0.00000023841858, z: 1.53}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1546,18 +1546,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 4032294999783473517}
   spawnParticles: []
-  HP: 10
+  HP: 100
   ATK: 10
   m_Speed: 6
   ATK_Speed: 2
   isDead: 0
   mBulletTransform: {fileID: 0}
+  mBulletName: 
   CH_Data: {fileID: 0}
   provocation: {fileID: 5884954167813700910}
   trailObject:
   - {fileID: 5489786779906516540}
   - {fileID: 790866530999347458}
   CH_Name: M_Babarian
+  MaxHP: 0
+  MP: 0
+  isMainCharacter: 0
 --- !u!1 &3637864188832028808
 GameObject:
   m_ObjectHideFlags: 0

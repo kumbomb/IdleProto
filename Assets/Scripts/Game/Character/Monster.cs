@@ -58,7 +58,7 @@ public class Monster : Character
         maxHp = HP;
         AttackRange = R_ATTACKRANGE;
         TargetRange = Mathf.Infinity; // 어느범위에 있던 플레이어를 추적할 수 있도록
-
+        ATK_Speed = 1f;
         if(isBoss)
         {
             StartCoroutine(Co_SkillSet());
@@ -109,7 +109,7 @@ public class Monster : Character
         bool isCritical = CalcCritical(ref damage);     // Critical 여부 체크
 
         BaseManager.Pool.PoolingObject("DamageText").Get((value) =>{
-            value.GetComponent<DamageText>().Init(transform.position, damage, false, isCritical);
+            value.GetComponent<DamageText>().Init(transform.position, damage, false, false, isCritical);
         });
 
         HP -= damage;

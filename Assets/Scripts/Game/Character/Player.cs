@@ -7,8 +7,18 @@ public class Player : Character
     [SerializeField] ParticleSystem provocation;    // 보스 등장시 나올 이펙트
     public GameObject[] trailObject;
     public string CH_Name;
+    public double MaxHP;
+    public int MP;    
+    public bool isMainCharacter = false; // 메인 캐릭터인지 체크 
+    
     Vector3 startPos;
     Quaternion rot;
+
+    #region  상태 변화 델리게이트
+    public delegate void MPChangeDelegate(Player player);
+    public static event MPChangeDelegate OnMPChanged;   // 모든 Player 클래스의 인스턴스에서 공유하도록 처리
+    #endregion
+
     protected override void Start()
     {
         base.Start();
@@ -23,18 +33,22 @@ public class Player : Character
         startPos = transform.position;
         rot = transform.rotation;
     }
+
+    #region 캐릭터 초기 데이터 설정 
     public void SetData(Character_Scriptable data)
     {
         CH_Data = data;
         AttackRange = data.mAttackRange;
+        ATK_Speed = data.mAttackSpeed;
         SetStat();
     }
-
     public void SetStat()
     {
         ATK = BaseManager.Hero.GetAtk(CH_Data.mRarity);
         HP = BaseManager.Hero.GetHp(CH_Data.mRarity);
+        MaxHP = HP;
     }
+    #endregion
 
     #region  Game State 관련 
     void OnReady()
@@ -45,6 +59,7 @@ public class Player : Character
         SetStat();
         transform.position = startPos;
         transform.rotation = rot;
+        if(!isMainCharacter) OnMPChanged?.Invoke(this);
     }
     void OnBoss()
     {
@@ -92,10 +107,11 @@ public class Player : Character
     }
 
     #endregion 
-
+    
+    //동작 진행
     void Update()
     {
-        if(isDead) return;
+        // if(isDead || isUsingSkill) return;
 
         if(StageManager.mState != STAGE_STATE.PLAY 
         && StageManager.mState != STAGE_STATE.BOSS_PLAY)  return;
@@ -132,26 +148,50 @@ public class Player : Character
             {
                 isAttack= true;
                 AnimChange("isAttack");
-                Invoke("InitAttack", 1f);
+                GetMP(5);       
+                Invoke("InitAttack", 1f / ATK_Speed );
             }
         }
     }
 
+    //공격 및 피격시 MP 회복
+    public void GetMP(int mp)
+    {
+        if(isMainCharacter || isUsingSkill) return;
+        
+        MP += mp;
+        MP = Mathf.Min(MP, CH_Data.mMaxMP);       
+        
+        if(MP == CH_Data.mMaxMP && chSkill != null)
+        {
+            MP = 0;
+            chSkill.SetSkill();
+            isUsingSkill = true;
+        }
+
+        OnMPChanged?.Invoke(this);
+    }
+    //피격 처리 
     public override void GetDamage(double damage)
     {
         if(isDead) return;
         var goObj = BaseManager.Pool.PoolingObject("DamageText").Get((value)=>
         {
-            value.GetComponent<DamageText>().Init(transform.position, damage, true);
+            value.GetComponent<DamageText>().Init(transform.position, damage, false,true);
         });
         HP -= damage;
+        
+        GetMP(3);    
+
         if(HP <= 0)
         {
             isDead = true;
             OnDeadEvent();
         }
     }
-    protected override void MeleeAttack()
+    
+    #region 근접 공격 처리
+    protected override void MeleeAttack()    
     {
         base.MeleeAttack();
         for(int i=0;i<trailObject.Length;i++)
@@ -166,4 +206,6 @@ public class Player : Character
             trailObject[i].SetActive(false);
         }
     }
+    #endregion
+
 }

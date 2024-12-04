@@ -15,4 +15,7 @@ MonoBehaviour:
   charcterName: M_Babarian
   iconName: Icon_Barbarian
   mAttackRange: 3
+  mAttackSpeed: 1
+  mHP: 0
+  mMaxMP: 50
   mRarity: 1

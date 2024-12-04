@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1778811659057033081}
   - component: {fileID: 3981338084784586285}
   - component: {fileID: 487637821424027269}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 1874020599582518048}
   - component: {fileID: 6350722730315454938}
   - component: {fileID: 7185760736891649133}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Long spikes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4864,7 +4864,7 @@ GameObject:
   - component: {fileID: 485798605559177388}
   - component: {fileID: 2832270441288798833}
   - component: {fileID: 3546015019213329941}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9768,7 +9768,7 @@ GameObject:
   - component: {fileID: 4179928873660732446}
   - component: {fileID: 3826418479477579033}
   - component: {fileID: 6724348804726080140}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Melee_Particle
   m_TagString: FxTemporaire
   m_Icon: {fileID: 0}

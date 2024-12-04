@@ -7,27 +7,33 @@ public class BaseManager : MonoBehaviour
     public static BaseManager instance = null;
 
     #region  풀링 매니저
-    public static PoolManager s_Pool = new PoolManager();
+    static PoolManager s_Pool = new PoolManager();
     public static PoolManager  Pool {get {return s_Pool;}}
     #endregion
 
     #region  Hero 매니저
-    public static HeroManager s_Hero = new HeroManager();
+    static HeroManager s_Hero = new HeroManager();
     public static HeroManager Hero {get {return s_Hero;}}
     #endregion
 
     #region  Data 매니저
-    public static DataManager s_Data = new DataManager();
+    static DataManager s_Data = new DataManager();
     public static DataManager Data {get {return s_Data;}}
     #endregion
 
     #region  Item 매니저
-    public static ItemManager s_Item = new ItemManager();
+    static ItemManager s_Item = new ItemManager();
     public static ItemManager Item {get{return s_Item;}}
+    #endregion
+
+    #region Character 매니저
+    static CharacterManager s_Char = new CharacterManager();
+    public static CharacterManager Char {get {return s_Char;}}
     #endregion
 
     private void Awake() 
     {
+        Application.targetFrameRate = 60;
         Initialize();
     }
 
@@ -37,6 +43,7 @@ public class BaseManager : MonoBehaviour
         {
             instance = this;
             Pool.Initialize(this.transform);
+            Data.Init();
             Item.Init();
 
             Invoke("StartGame", 2f);

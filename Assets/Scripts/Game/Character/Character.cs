@@ -12,21 +12,35 @@ public class Character : MonoBehaviour
     protected float AttackRange = 7f;    // 공격 범위
     protected float TargetRange = 12f;    // 탐지 범위
     protected bool isAttack = false;
+    public bool isUsingSkill = false;   // 스킬 사용중인지 체크 => 스킬 사용중에는 마나회복 불가
+    public bool isSkillNonAttack = false; // 스킬을 사용중에 공격을 하면 안되는지 체크 true면 공격 진행불가
 
     protected Transform mTarget;
     public bool isDead = false;
     [SerializeField] Transform mBulletTransform;
     [SerializeField] string mBulletName;
+    
+    protected SkillBase chSkill;  //보유한 스킬 
 
     protected virtual void Start(){
-
+        chSkill = GetComponent<SkillBase>();
     }
-    protected void AnimChange(string temp)
+    public void AnimChange(string temp)
     {
+        //스킬 사용중에는 애니메이션 변경불가처리
+        //isSkillNonAttack 상태에 따라 스킬 사용중 일반 공격 사용 가능여부 결정
+        if(isSkillNonAttack && isUsingSkill) return;
+
         anim.SetBool("isIdle", false);
         anim.SetBool("isMove", false);
         
-        if (string.Equals(temp, "isAttack") || string.Equals(temp, "isClear") || string.Equals(temp, "isDead"))
+        anim.speed = string.Equals(temp,"isAttack") ? ATK_Speed : 1f;
+
+        if (string.Equals(temp, "isAttack") 
+            || string.Equals(temp, "isClear") 
+            || string.Equals(temp, "isDead")
+            || string.Equals(temp, "useSkill")
+            )
         {
             anim.SetTrigger(temp);
             return;
@@ -100,6 +114,16 @@ public class Character : MonoBehaviour
          BaseManager.Pool.PoolingObject("AttackHelper").Get((value) => {
             value.transform.position = mTarget.position;
             value.GetComponent<Bullet>().Init_Melee_Attack(mTarget, ATK);
+        });
+    }
+    
+    public virtual void RecoveryHP(double _recoveryValue)
+    {
+        HP += _recoveryValue;
+
+        var goObj = BaseManager.Pool.PoolingObject("DamageText").Get((value)=>
+        {
+            value.GetComponent<DamageText>().Init(transform.position, _recoveryValue, true);
         });
     }
 

@@ -15,4 +15,7 @@ MonoBehaviour:
   charcterName: M_Knight_H1
   iconName: Icon_Knight_H1
   mAttackRange: 3
+  mAttackSpeed: 1
+  mHP: 0
+  mMaxMP: 50
   mRarity: 2

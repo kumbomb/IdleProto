@@ -1826,7 +1826,7 @@ Transform:
   m_GameObject: {fileID: 5434505503392833593}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.766625, y: 0.00000023841858, z: -1.2643719}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1876,17 +1876,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 8374412661358208549}
   spawnParticles: []
-  HP: 10
+  HP: 100
   ATK: 10
   m_Speed: 6
   ATK_Speed: 2
   isDead: 0
   mBulletTransform: {fileID: 0}
+  mBulletName: 
   CH_Data: {fileID: 0}
   provocation: {fileID: 4184587177959702642}
   trailObject:
   - {fileID: 886115184614292425}
   CH_Name: M_Knight_H1
+  MaxHP: 0
+  MP: 0
+  isMainCharacter: 0
 --- !u!1 &5513767585592545050
 GameObject:
   m_ObjectHideFlags: 0

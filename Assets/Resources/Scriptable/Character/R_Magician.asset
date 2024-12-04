@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: R_Magician
   m_EditorClassIdentifier: 
   charcterName: R_Magician
-  iconName: Icon_Elementalist_B
+  iconName: Icon_Elementalist
   mAttackRange: 7
+  mAttackSpeed: 1
+  mHP: 0
+  mMaxMP: 50
   mRarity: 5

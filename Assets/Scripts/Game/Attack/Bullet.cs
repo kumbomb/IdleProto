@@ -32,7 +32,11 @@ public class Bullet : MonoBehaviour
 
     //기본 근거리 공격
     public void Init_Melee_Attack(Transform target, double _damage)
-    {
+    { 
+        foreach(var item in mProjectiles)
+        {
+            item.Value.SetActive(false);
+        }
         mTarget = target;
         if(mTarget != null)
         {
@@ -46,12 +50,18 @@ public class Bullet : MonoBehaviour
     //기본 원거리 공격
     public void Init(Transform target, double _damage, string charName)
     {
+        foreach(var item in mProjectiles)
+        {
+            item.Value.SetActive(false);
+        }
+
         mTarget = target;
         transform.LookAt(mTarget);
         isHit = false;
         mTargetPos = mTarget.position;
         damage = _damage;
         mCharName = charName;
+
         mProjectiles[mCharName].gameObject.SetActive(true);
     }
 

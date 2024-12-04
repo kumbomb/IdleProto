@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: R_Archer_H1
   m_EditorClassIdentifier: 
   charcterName: R_Archer_H1
-  iconName: Icon_Hunter
+  iconName: Icon_Archer_H1
   mAttackRange: 7
+  mAttackSpeed: 1
+  mHP: 0
+  mMaxMP: 50
   mRarity: 5

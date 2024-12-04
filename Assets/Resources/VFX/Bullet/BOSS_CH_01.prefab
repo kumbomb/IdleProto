@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6874196443221553636}
   - component: {fileID: 1861817203500957364}
   - component: {fileID: 3783682412664714814}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FireGlowTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4784,7 +4784,7 @@ GameObject:
   - component: {fileID: 3755786999282186078}
   - component: {fileID: 1014270375161077512}
   - component: {fileID: 332235447291184619}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SmokeTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9539,7 +9539,7 @@ GameObject:
   - component: {fileID: 5292471217307293783}
   - component: {fileID: 8160305033144754647}
   - component: {fileID: 2005910875280443485}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BOSS_CH_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

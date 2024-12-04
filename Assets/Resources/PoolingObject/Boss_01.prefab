@@ -2620,7 +2620,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 3.723, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1683388112159137849}
@@ -2678,11 +2678,10 @@ MonoBehaviour:
   ATK: 10
   m_Speed: 4
   ATK_Speed: 0
+  isUsingSkill: 0
   isDead: 0
   mBulletTransform: {fileID: 0}
   mBulletName: BOSS_CH_01
-  R_ATK: 5000
-  R_HP: 5000
   R_ATTACKRANGE: 5
   isBoss: 1
 --- !u!114 &5045134597060422219
@@ -2697,6 +2696,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e5db91d797c0284aa4b073af7db525c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skillEffect: {fileID: 0}
+  skillDmg: 0
 --- !u!1001 &4535000548208330804
 PrefabInstance:
   m_ObjectHideFlags: 0

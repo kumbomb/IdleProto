@@ -1,8 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using JetBrains.Annotations;
 
 // State Pattern 사용 
 
