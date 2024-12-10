@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
+[System.Serializable]
+public class Item
+{
+    public Item_Scriptable data;
+    public int Count;
+}
+
+
 //BaseManager에서 전체 관리 
 public class ItemManager
 {

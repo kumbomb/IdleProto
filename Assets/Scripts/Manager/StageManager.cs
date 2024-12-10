@@ -47,7 +47,6 @@ public class StageManager
         {
             case STAGE_STATE.READY:
             {
-                Debug.Log("Ready");
                 mMaxCount = int.Parse(CSVManager.Spawn_Data[BaseManager.Data.Stage]["MaxCount"].ToString());
                 mReadyEvent?.Invoke();
                 Utils.NextAction(()=>{ChangeStageState(STAGE_STATE.PLAY);}, 2f);
@@ -55,14 +54,12 @@ public class StageManager
             break;
             case STAGE_STATE.PLAY:
             {
-                Debug.Log("PLAY");
                 mPlayEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.BOSS_READY);}, 2f);
             }
             break;
             case STAGE_STATE.BOSS_READY:
             {
-                Debug.Log("BOSS READY");
                 mCurCount = 0;
                 mBossReadyEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.BOSS_PLAY);}, 2f);
@@ -70,14 +67,12 @@ public class StageManager
             break;
             case STAGE_STATE.BOSS_PLAY:
             {
-                Debug.Log("BOSS PLAY");
                 mBossPlayEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.PLAYER_DEAD);}, 2f);
             }
             break;
             case STAGE_STATE.PLAYER_DEAD:
             {
-                Debug.Log("PLAYER_DEAD");
                 isDead = true;
                 mPlayerDeadEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.CLEAR);}, 2f);
@@ -86,7 +81,6 @@ public class StageManager
             case STAGE_STATE.CLEAR:
             {
                 BaseManager.Data.Stage++;
-                Debug.Log("CLEAR");
                 mClearEvent?.Invoke();
                 //NextAction(()=>{ChangeStageState(STAGE_STATE.READY);}, 2f);
             }

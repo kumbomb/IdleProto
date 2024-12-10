@@ -1,16 +1,21 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class InvenManager : MonoBehaviour
+//획득한 아이템을 관리
+public class InvenManager
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public Dictionary<string, Item> mItems = new();
 
-    // Update is called once per frame
-    void Update()
+    public void GetItem(Item_Scriptable _data)
     {
-        
+        if(mItems.ContainsKey(_data.name))
+        {
+            mItems[_data.name].Count++;
+        }
+        else
+        {
+            mItems.Add(_data.name,new Item{data = _data, Count = 1});            
+        }
     }
+ 
 }

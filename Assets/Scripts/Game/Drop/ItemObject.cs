@@ -78,6 +78,7 @@ public class ItemObject : MonoBehaviour
 
         //아이템 획득처리 =-> Epic 일때만
         HudCanvas.instance.GetItem(mItemInfo);
+        BaseManager.Inven.GetItem(mItemInfo);
 
         yield return new WaitForSeconds(0.5f);
         BaseManager.Pool.pool_Dictionary["ItemObject"].Return(this.gameObject);

@@ -31,6 +31,11 @@ public class BaseManager : MonoBehaviour
     public static CharacterManager Char {get {return s_Char;}}
     #endregion
 
+    #region  Inventory 매니저
+    static InvenManager s_Inven = new InvenManager();
+    public static InvenManager Inven {get {return s_Inven;}}
+    #endregion
+
     private void Awake() 
     {
         Application.targetFrameRate = 60;

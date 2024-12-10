@@ -15,6 +15,7 @@ public class HudCanvas : MonoBehaviour
     
     [Header("하단 버튼")]
     [SerializeField] Button[] bottomMenuBtns;
+    [SerializeField] Button invenBtn;
     [Header("상단 플레이어 레벨 / 전투력")]
     [SerializeField] private TextMeshProUGUI topLevelText;
     [SerializeField] private TextMeshProUGUI battlePowerText;
@@ -50,7 +51,7 @@ public class HudCanvas : MonoBehaviour
     [SerializeField] Image mainHeroSkillFill;
 
     Dictionary<Player, Item_HeroesStatus> mHeroStatusDic = new();
-
+ 
     CancellationTokenSource getTopGradeCTS;         // 상단 노티 unitask CTS
     bool isOpenTopGrade = false;
 
@@ -79,7 +80,7 @@ public class HudCanvas : MonoBehaviour
                 bottomMenuBtns[i].onClick.AddListener(() => { PopupCanvas.instance.GetUI(POPUP.POPUP_HERO);});
             }
         }
- 
+        invenBtn.onClick.AddListener(()=>{PopupCanvas.instance.GetUI(POPUP.POPUP_INVENTORY);});
         topGradeAnim.gameObject.GetComponent<AnimControl>().AnimFinishAction
             = () => {
                 topGradeAnim.gameObject.SetActive(false);

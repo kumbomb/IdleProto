@@ -29,6 +29,8 @@ public enum ATLAS_ENUM
 public enum POPUP
 {
     POPUP_HERO,
+    POPUP_INVENTORY,
+    POPUP_ITEMINFO,
     
 }
 

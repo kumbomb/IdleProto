@@ -37,8 +37,6 @@ public class Spawner : MonoBehaviour
     //대기 
     public void OnReady()
     {
-
-        Debug.Log(m_Count + " / " + m_SpawnTime);
         m_Count = int.Parse(CSVManager.Spawn_Data[BaseManager.Data.Stage]["Spawn_Count"].ToString());
         m_SpawnTime = float.Parse(CSVManager.Spawn_Data[BaseManager.Data.Stage]["Spawn_Timer"].ToString());
     }

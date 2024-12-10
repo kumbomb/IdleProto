@@ -35,6 +35,7 @@ public class PopupCanvas : MonoBehaviour
     public void GetUI(POPUP name, bool isFade = false)
     {
         var go = Instantiate(Resources.Load<UI_Base>($"UI/Popup/{name}"),transform);
+        go.popupType = name;
         Utils.UI_Stack.Push(go);
     }
 

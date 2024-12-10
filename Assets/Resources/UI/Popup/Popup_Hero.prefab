@@ -2193,7 +2193,6 @@ MonoBehaviour:
   heroItem: {fileID: 3308683421841872881, guid: 91f707a2aaba13e4f82252579c33f84e, type: 3}
   closeBtn: {fileID: 3955899651324170030}
   Parts: {fileID: 0}
-  heroParts: []
 --- !u!95 &7106640411833393178
 Animator:
   serializedVersion: 7
